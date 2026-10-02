@@ -1,82 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginBottom="10dp">
+    android:layout_marginHorizontal="24dp"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/lightGrey"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp">
 
-    <LinearLayout
-        android:layout_width="350dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="35dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/cr15beaeaea"
-        android:orientation="vertical"
-        android:paddingVertical="14dp"
-        android:paddingRight="16dp">
+        android:padding="16dp">
 
         <TextView
+            android:id="@+id/statusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginBottom="9dp"
             android:text="Upcoming"
-            android:textColor="#222222"
-            android:textSize="16sp" />
+            android:textColor="@color/pink"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginTop="8dp"
+            android:text="28 August 2026"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statusText" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="28 August 2026"
-                android:textColor="#222222"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R30"
-                android:textColor="#222222"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/priceText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:text="R30"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/dateText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dateText" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="11:00 AM | 1 Hour"
-                android:textColor="#052224"
-                android:textSize="15sp" />
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="11:00 AM | 1 Hour"
+            android:textColor="@color/textColor"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <TextView
+            android:id="@+id/guestText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 Guest"
+            android:textColor="@color/textColor"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/timeText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/timeText" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1 Guest"
-                android:textColor="#052224"
-                android:textSize="15sp" />
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

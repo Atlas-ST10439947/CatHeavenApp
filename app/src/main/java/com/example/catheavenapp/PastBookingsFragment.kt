@@ -38,7 +38,7 @@ class PastBookingsFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyPastBookingsRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                adapter = BookingAdapter(PlaceholderContent.ITEMS)
             }
         }
         return view

@@ -1,235 +1,141 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pink"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:orientation="vertical">
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".ProfileFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:paddingBottom="80dp">
 
+        <!-- Header -->
         <LinearLayout
+            android:id="@+id/profileHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="38dp"
-            android:layout_marginBottom="90dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="@color/pink"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit my Profile"
-                android:textColor="#222222"
-                android:textSize="20sp"
+                android:text="Personal Profile"
+                android:textColor="@color/white"
+                android:textSize="28sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
-        <RelativeLayout
+        <!-- Edit Form Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/profileCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:background="@drawable/cr35bffffff">
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="32dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileHeader">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="24dp">
 
-                <RelativeLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:hint="Full Name"
+                    app:boxStrokeColor="@color/pink"
+                    app:hintTextColor="@color/pink">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="30dp">
+                        android:inputType="textPersonName"
+                        android:text="Jane Smith"
+                        android:textColor="@color/darkColor" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="53dp"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Email Address"
+                    app:boxStrokeColor="@color/pink"
+                    app:hintTextColor="@color/pink">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:text="jane@example.com"
+                        android:textColor="@color/darkColor" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Jane Smith"
-                                android:textColor="#222222"
-                                android:textSize="20sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Phone Number"
+                    app:boxStrokeColor="@color/pink"
+                    app:hintTextColor="@color/pink">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone"
+                        android:text="+27 123 456 7890"
+                        android:textColor="@color/darkColor" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="38dp"
-                            android:layout_marginBottom="30dp"
-                            android:text="account settings"
-                            android:textColor="#222222"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                <!-- Location Merged Here -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Your Location"
+                    app:boxStrokeColor="@color/pink"
+                    app:hintTextColor="@color/pink">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress"
+                        android:text="Somerset West, WC"
+                        android:textColor="@color/darkColor" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="38dp"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="center_horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnUpdateProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:minHeight="56dp"
+                    android:text="Update Profile"
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/pink"
+                    app:cornerRadius="12dp" />
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <LinearLayout
-                                    android:id="@+id/rbjd5i5ikqwe"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical">
-
-                                    <LinearLayout
-                                        android:id="@+id/rov1lh0dynbd"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginEnd="12dp"
-                                        android:layout_marginBottom="61dp"
-                                        android:orientation="vertical"
-                                        android:paddingVertical="1dp"
-                                        android:paddingLeft="1dp"
-                                        android:paddingRight="20dp">
-
-                                        <TextView
-                                            android:id="@+id/ralyiupbvn3b"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Username"
-                                            android:textColor="#222222"
-                                            android:textSize="16sp" />
-                                    </LinearLayout>
-
-                                    <TextView
-                                        android:id="@+id/r7krh1rrq1bl"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginEnd="64dp"
-                                        android:layout_marginBottom="61dp"
-                                        android:text="phone"
-                                        android:textColor="#222222"
-                                        android:textSize="16sp" />
-
-                                    <TextView
-                                        android:id="@+id/rna6rsmf12wr"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="email address"
-                                        android:textColor="#222222"
-                                        android:textSize="16sp" />
-                                </LinearLayout>
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/r9ldh8zf6isu"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginTop="26dp"
-                                android:background="@drawable/cr10beaeaea"
-                                android:orientation="vertical"
-                                android:paddingVertical="6dp"
-                                android:paddingLeft="20dp"
-                                android:paddingRight="266dp">
-
-                                <TextView
-                                    android:id="@+id/r2ttgz1lopkg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Jane Smith"
-                                    android:textColor="#222222"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/r97173e35qma"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginBottom="41dp"
-                                android:background="@drawable/cr10beaeaea"
-                                android:orientation="vertical"
-                                android:paddingVertical="6dp"
-                                android:paddingLeft="20dp"
-                                android:paddingRight="231dp">
-
-                                <TextView
-                                    android:id="@+id/rqadzclil8da"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="+27 123 456 7890"
-                                    android:textColor="#1A1115"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
-                        </RelativeLayout>
-
-                        <EditText
-                            android:id="@+id/rwywfjgq57m"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="38dp"
-                            android:layout_marginBottom="30dp"
-                            android:background="@drawable/cr10beaeaea"
-                            android:hint="jane@example.com"
-                            android:inputType="text"
-                            android:paddingHorizontal="20dp"
-                            android:paddingVertical="6dp"
-                            android:textColor="#222222"
-                            android:textSize="13sp" />
-
-                        <LinearLayout
-                            android:id="@+id/r3vgjcy23uxc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="154dp"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:id="@+id/rdq9nwxhff5l"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/cr30bf2707c"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:orientation="vertical"
-                                android:paddingHorizontal="28dp"
-                                android:paddingVertical="5dp">
-
-                                <TextView
-                                    android:id="@+id/rvi65mz06agf"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Update Profile"
-                                    android:textColor="#222222"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-</LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

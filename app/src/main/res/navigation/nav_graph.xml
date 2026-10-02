@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <!-- Tab 1: Home Flow -->
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.catheavenapp.HomeFragment"
+        tools:layout="@layout/fragment_home" />
+
+    <!-- Tab 2: Cats Flow -->
+    <fragment
+        android:id="@+id/nav_cats"
+        android:name="com.example.catheavenapp.ResidentListFragment"
+        tools:layout="@layout/fragment_resident_list">
+        <action
+            android:id="@+id/action_catList_to_catItem"
+            app:destination="@id/catItemFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/catItemFragment"
+        android:name="com.example.catheavenapp.ResidentFragment"
+        tools:layout="@layout/fragment_resident" />
+
+    <!-- Tab 3: Menu Flow -->
+    <fragment
+        android:id="@+id/nav_menu"
+        android:name="com.example.catheavenapp.MenuFragment"
+        tools:layout="@layout/fragment_menu" />
+
+    <!-- Tab 4: Booking Flow -->
+    <fragment
+        android:id="@+id/nav_booking"
+        android:name="com.example.catheavenapp.UpcomingBookingsFragment"
+        tools:layout="@layout/fragment_upcoming_booking_list" />
+
+    <!-- Tab 5: Profile/Settings Flow -->
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.catheavenapp.SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+        <!-- Route to Profile (which now includes Location) -->
+        <action
+            android:id="@+id/action_settings_to_profile"
+            app:destination="@id/profileFragment" />
+        <!-- Route to Notifications -->
+        <action
+            android:id="@+id/action_settings_to_notifs"
+            app:destination="@id/notifsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.catheavenapp.SettingsProfileFragment"
+        tools:layout="@layout/fragment_settings_profile" />
+
+    <fragment
+        android:id="@+id/notifsFragment"
+        android:name="com.example.catheavenapp.SettingsNotifsFragment"
+        tools:layout="@layout/fragment_settings_notifs" />
+
+</navigation>

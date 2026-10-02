@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="com.example.catheavenapp.PastBookingsFragment"
+    android:name="com.echosolutions.catheaven.PastBookingsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutManager="LinearLayoutManager"
+    android:background="@color/white"
+    android:clipToPadding="false"
+    android:paddingTop="16dp"
+    android:paddingBottom="80dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     tools:context=".PastBookingsFragment"
     tools:listitem="@layout/fragment_past_booking" />
