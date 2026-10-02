@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+   function isAdmin() {
+  return signedIn() && request.auth.token.get('admin', false) == true;
+}
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Public catalogue - anyone can read, only admins can write
+    match /cats/{catId} {
+      allow read: if true;
+      allow write: if isAdmin();
+
+      match /updates/{updateId} {
+        allow read: if true;
+        allow write: if isAdmin();
+      }
+    }
+
+    match /timeslots/{timeslotId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /pricingTiers/{tierId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /menuItems/{menuItemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User accounts - only the account owner can read/update their own profile
+    match /users/{uid} {
+      allow read, update: if isOwner(uid);
+      allow create: if isOwner(uid);
+      allow delete: if isAdmin();
+    }
+
+    // Bookings - supporters can create their own, capped at 8 guests
+    match /bookings/{bookingId} {
+      allow read: if isAdmin() ||
+                     (signedIn() && resource.data.supporterId == request.auth.uid);
+
+      allow create: if signedIn()
+                    && request.resource.data.supporterId == request.auth.uid
+                    && request.resource.data.numberOfGuests <= 8
+                    && request.resource.data.numberOfGuests > 0;
+
+      allow update, delete: if isAdmin();
+    }
+
+    // Paw Parent enrolments
+    match /pawParentEnrolments/{enrolmentId} {
+      allow read: if isAdmin() ||
+                     (signedIn() && resource.data.supporterId == request.auth.uid);
+
+      allow create: if signedIn()
+                    && request.resource.data.supporterId == request.auth.uid;
+
+      allow update: if isAdmin() ||
+                       (signedIn() && resource.data.supporterId == request.auth.uid
+                        && request.resource.data.status == 'cancelled');
+
+      allow delete: if isAdmin();
+    }
+  }
+}
