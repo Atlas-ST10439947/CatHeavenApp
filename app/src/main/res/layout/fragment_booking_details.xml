@@ -1,223 +1,243 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#FFFFFF"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".BookingDetailsFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/pink"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="41dp"
-            android:scaleType="fitXY"
-            android:src="@android:drawable/star_big_on"
-            app:shapeAppearanceOverlay="@style/cr40" />
-
-        <ImageView
-            android:layout_width="47dp"
-            android:layout_height="36dp"
-            android:scaleType="fitXY"
-            android:src="@android:drawable/star_big_on"
-            app:shapeAppearanceOverlay="@style/cr40" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:paddingBottom="40dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/detailsHeader"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginVertical="25dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:background="@color/pink"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:text="Just a few more details."
-                android:textColor="#222222"
-                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="We’ll send your confirmation to your email."
-                android:textColor="#222222"
-                android:textSize="14sp" />
-
+                android:layout_marginTop="8dp"
+                android:text="We’ll send confirmation to your email."
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
-        <LinearLayout
+        <!-- Guest Selector -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/guestSelectorCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:background="@drawable/cr15beaeaea"
-            android:elevation="4dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button18"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/pink"
-                android:text="-" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:text="# of Guests" />
-
-            <Button
-                android:id="@+id/button19"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/pink"
-                android:text="+" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginVertical="30dp"
-            android:background="@drawable/cr15beaeaea"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <EditText
-                android:id="@+id/editTextTextEmailAddress2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textEmailAddress" />
-
-            <EditText
-                android:id="@+id/editTextPhone2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="phone" />
-
-            <EditText
-                android:id="@+id/editTextText3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text"
-                android:text="Name" />
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="15dp"
-            android:backgroundTint="@color/lightGrey"
-            android:elevation="4dp">
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="@color/lightGrey"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailsHeader">
 
             <LinearLayout
-                android:id="@+id/rdtfu4y65u19"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                android:orientation="vertical"
-                android:paddingVertical="16dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMinusGuest"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@android:drawable/ic_delete"
+                    app:iconTint="@color/white"
+                    app:backgroundTint="@color/pink" />
 
-                <LinearLayout
-                    android:id="@+id/rrxeeypd3zf"
+                <TextView
+                    android:id="@+id/guestCountText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1 Guest"
+                    android:textColor="@color/darkColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddGuest"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@android:drawable/ic_input_add"
+                    app:iconTint="@color/white"
+                    app:backgroundTint="@color/pink" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Form Fields -->
+        <LinearLayout
+            android:id="@+id/formLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guestSelectorCard">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Full Name"
+                app:boxStrokeColor="@color/pink"
+                app:hintTextColor="@color/pink">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center_vertical"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/darkColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Email Address"
+                app:boxStrokeColor="@color/pink"
+                app:hintTextColor="@color/pink">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/darkColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Phone Number"
+                app:boxStrokeColor="@color/pink"
+                app:hintTextColor="@color/pink">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:textColor="@color/darkColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Summary & Total -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/summaryCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="@color/lightPink"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/formLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
                     <TextView
-                        android:id="@+id/r0jd8g1lo5ogg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1 hour x 1 guest"
-                        android:textColor="#222222"
-                        android:textSize="15sp" />
-
-                    <View
+                        android:id="@+id/summaryDetails"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="1 hour x 1 guest"
+                        android:textColor="@color/darkColor"
+                        android:textSize="15sp" />
                     <TextView
-                        android:id="@+id/r6yi2tsxecv8"
+                        android:id="@+id/summaryCalculation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="R30 x 1"
-                        android:textColor="#222222"
+                        android:textColor="@color/darkColor"
                         android:textSize="15sp" />
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="@color/pink" />
+
                 <LinearLayout
-                    android:id="@+id/r5c2gsbmatco"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="37dp"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal">
-
                     <TextView
-                        android:id="@+id/rs7nd75chfrc"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="total"
-                        android:textColor="#222222"
+                        android:layout_weight="1"
+                        android:text="Total Due"
+                        android:textColor="@color/darkColor"
                         android:textSize="20sp"
                         android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
                     <TextView
-                        android:id="@+id/rgdcqzi8m46m"
+                        android:id="@+id/summaryTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="R30"
-                        android:textColor="#222222"
+                        android:textColor="@color/darkColor"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/button20"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmBooking"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:backgroundTint="@color/pink"
-            android:textColor="@color/textColor"
-            android:text="Confirm Booking" />
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Confirm Booking"
+            android:textSize="16sp"
+            app:backgroundTint="@color/pink"
+            app:cornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
 
-    </LinearLayout>
-
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

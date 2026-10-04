@@ -3,9 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pink">#F2707C</color>
-    <color name="lightPink">#F8A5AD</color>"
+    <color name="lightPink">#F8A5AD</color>
     <color name="darkBrown">#261A1F</color>
     <color name="textColor">#222222</color>
     <color name="lightGrey">#EAEAEA</color>
     <color name="darkColor">#1A1115</color>
+    <color name="errorRed">#B3261E</color>
+    <color name="successGreen">#2E7D32</color>
 </resources>

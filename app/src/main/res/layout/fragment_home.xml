@@ -1,327 +1,402 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:background="@color/pink"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:orientation="vertical">
+    android:background="@color/white"
+    android:fillViewport="true">
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@android:drawable/star_big_on" />
+        android:paddingBottom="32dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingTop="25dp">
+        <ImageView
+            android:id="@+id/headerImage"
+            android:layout_width="0dp"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/about2"
+            android:contentDescription="Photograph of Cat Heaven cafe and resident cats"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/introText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:paddingHorizontal="30dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
             android:text="Visit our 22 rescued cats in their peaceful sanctuary. Book a slot to enjoy coffee, cuddles, and a little bit of magic."
-            android:textColor="#052224"
-            android:textSize="15sp" />
+            android:textColor="@color/darkColor"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerImage" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
+        <!-- LEFT COLUMN: Opening Hours -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/hoursCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="@color/lightGrey"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rightColumn"
+            app:layout_constraintEnd_toStartOf="@+id/rightColumn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/introText"
+            app:layout_constraintWidth_percent="0.43">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="24dp"
-                android:background="@drawable/cr15beaeaea"
-                android:elevation="4dp"
                 android:orientation="vertical"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="10dp">
+                android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="29dp"
-                        android:layout_height="29dp"
-                        android:layout_marginEnd="5dp"
-                        android:scaleType="fitXY"
-                        android:src="@android:drawable/star_big_on"
-                        app:shapeAppearanceOverlay="@style/cr40" />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/booking"
+                        app:tint="@color/pink"
+                        android:contentDescription="Clock Icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="opening hours"
-                        android:textColor="#222222"
-                        android:textSize="12sp" />
+                        android:layout_marginStart="8dp"
+                        android:text="Opening Hours"
+                        android:textColor="@color/darkColor"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tuesday - Friday\n10:00am-4:30pm\n\nSaturday\n10:00am-4:00pm\n\nClosed Mon &amp; Sun"
-                    android:textColor="#222222"
+                    android:layout_marginTop="12dp"
+                    android:text="Tuesday - Friday\n10:00am - 4:30pm\n\nSaturday\n10:00am - 4:00pm\n\nClosed Mon &amp; Sun"
+                    android:textColor="@color/textColor"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="2dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- RIGHT COLUMN: Max Group & Rescue Cats -->
+        <LinearLayout
+            android:id="@+id/rightColumn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/hoursCard"
+            app:layout_constraintTop_toBottomOf="@+id/introText"
+            app:layout_constraintWidth_percent="0.43">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/lightGrey"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/user"
+                            app:tint="@color/pink"
+                            android:contentDescription="User Group Icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Max Group"
+                            android:textColor="@color/darkColor"
+                            android:textSize="12sp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Up to 8 Guests"
+                        android:textColor="@color/textColor"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/lightGrey"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/cats"
+                            app:tint="@color/pink"
+                            android:contentDescription="Cat Icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Rescue Cats"
+                            android:textColor="@color/darkColor"
+                            android:textSize="12sp"
+                            android:textAllCaps="true"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="22 Furry Friends"
+                        android:textColor="@color/textColor"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Location Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/locationCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/lightGrey"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rightColumn">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/location"
+                        app:tint="@color/pink"
+                        android:contentDescription="Location Pin Icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Location"
+                        android:textColor="@color/darkColor"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="35 Bright St, Audas Estate, Somerset West"
+                    android:textColor="@color/textColor"
                     android:textSize="15sp" />
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- House Rules Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/rulesCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/lightPink"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/locationCard">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/cr15beaeaea"
-                    android:elevation="4dp"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginEnd="5dp"
-                            android:scaleType="fitXY"
-                            android:src="@android:drawable/star_big_on"
-                            app:shapeAppearanceOverlay="@style/cr40" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Max group"
-                            android:textColor="#222222"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/pawprint"
+                        app:tint="@color/darkColor"
+                        android:contentDescription="Pawprint Icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Up to 8 Guests"
-                        android:textColor="#222222"
-                        android:textSize="15sp"
+                        android:layout_marginStart="8dp"
+                        android:text="House Rules"
+                        android:textColor="@color/darkColor"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
                         android:textStyle="bold" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/cr15beaeaea"
-                    android:elevation="4dp"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp">
-
-                    <LinearLayout
-                        android:id="@+id/rhil8dfv9mth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="27dp"
-                            android:layout_height="27dp"
-                            android:layout_marginEnd="5dp"
-                            android:scaleType="fitXY"
-                            android:src="@android:drawable/star_big_on"
-                            app:shapeAppearanceOverlay="@style/cr40" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="rescue cats"
-                            android:textColor="#222222"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="22 Furry Friends"
-                        android:textColor="#222222"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/cr15beaeaea"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="31dp"
-                    android:layout_height="31dp"
-                    android:layout_marginEnd="5dp"
-                    android:scaleType="fitXY"
-                    android:src="@android:drawable/star_big_on"
-                    app:shapeAppearanceOverlay="@style/cr40" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Location"
-                    android:textColor="#222222"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="12dp"
+                    android:text="· Please be gentle with our rescue cats\n· No outside food - café menu available\n· Children welcome with adult supervision"
+                    android:textColor="@color/darkColor"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp" />
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="35 Bright St, Audas Estate, Somerset West"
-                android:textColor="#222222"
-                android:textSize="15sp" />
-        </LinearLayout>
+        <!-- Action Buttons -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bookButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="24dp"
+            android:minHeight="56dp"
+            android:text="Book a Visit"
+            android:textSize="16sp"
+            app:backgroundTint="@color/pink"
+            app:cornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rulesCard" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/donateButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="12dp"
+            android:minHeight="56dp"
+            android:text="Donate to Cat Heaven"
+            android:textColor="@color/darkColor"
+            android:textSize="16sp"
+            app:backgroundTint="@color/lightGrey"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/share"
+            app:iconGravity="textStart"
+            app:iconTint="@color/darkColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bookButton" />
+
+        <!-- Contact Info -->
         <LinearLayout
+            android:id="@+id/contactRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/cr15bffc4ca"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:paddingHorizontal="10dp"
-            android:paddingTop="5dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="5dp"
-                    android:scaleType="fitXY"
-                    android:src="@android:drawable/star_big_on"
-                    app:shapeAppearanceOverlay="@style/cr40" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="House Rules"
-                    android:textColor="#222222"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="· Please be gentle with our rescue cats\n· No outside food - café menu available\n· Children welcome with adult supervision"
-                android:textColor="#222222"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/pink"
-                android:text="Book a visit" />
-
-            <Button
-                android:id="@+id/button6"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/lightGrey"
-                android:text="Donate to Cat Heaven"
-                android:textColor="@color/textColor"
-                app:icon="@drawable/share"
-                app:iconPadding="8dp"
-                app:iconTint="@color/black" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="24dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/donateButton">
 
+            <!-- Phone -->
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:scaleType="fitXY"
-                android:src="@android:drawable/star_big_on"
-                app:shapeAppearanceOverlay="@style/cr40" />
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/user"
+                app:tint="@color/pink"
+                android:contentDescription="Phone Icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="+27 83 357 2527"
-                android:textColor="#222222"
-                android:paddingEnd="20dp"
+                android:textColor="@color/textColor"
                 android:textSize="14sp" />
 
+            <!-- Email -->
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginEnd="5dp"
-                android:scaleType="fitXY"
-                android:src="@android:drawable/star_big_on"
-                app:shapeAppearanceOverlay="@style/cr40" />
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/notification"
+                app:tint="@color/pink"
+                android:contentDescription="Email Icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="meow@catheaven.co.za"
-                android:textColor="#222222"
+                android:textColor="@color/textColor"
                 android:textSize="14sp" />
         </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/admin_nav_graph"
+    app:startDestination="@id/adminFragment">
+
+    <!-- Central Dashboard Hub -->
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.catheavenapp.AdminFragment"
+        tools:layout="@layout/fragment_admin">
+
+        <action
+            android:id="@+id/action_adminFragment_to_adminScheduleFragment"
+            app:destination="@id/adminScheduleFragment" />
+
+        <action
+            android:id="@+id/action_adminFragment_to_adminBookingsFragment"
+            app:destination="@id/adminBookingsFragment" />
+
+        <action
+            android:id="@+id/action_adminFragment_to_adminUsersFragment"
+            app:destination="@id/adminUsersFragment" />
+
+        <action
+            android:id="@+id/action_adminFragment_to_adminContentFragment"
+            app:destination="@id/adminContentFragment" />
+    </fragment>
+
+    <!-- Management Sub-Screens -->
+    <fragment
+        android:id="@+id/adminScheduleFragment"
+        android:name="com.example.catheavenapp.AdminScheduleFragment"
+        tools:layout="@layout/fragment_admin_schedule" />
+
+    <fragment
+        android:id="@+id/adminBookingsFragment"
+        android:name="com.example.catheavenapp.AdminBookingsFragment"
+        tools:layout="@layout/fragment_admin_bookings" />
+
+    <fragment
+        android:id="@+id/adminUsersFragment"
+        android:name="com.example.catheavenapp.AdminUsersFragment"
+        tools:layout="@layout/fragment_admin_users" />
+
+    <fragment
+        android:id="@+id/adminContentFragment"
+        android:name="com.example.catheavenapp.AdminContentFragment"
+        tools:layout="@layout/fragment_admin_content" />
+
+</navigation>

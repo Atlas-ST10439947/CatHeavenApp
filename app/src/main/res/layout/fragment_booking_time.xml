@@ -1,197 +1,218 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#FFFFFF"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".BookingTimeFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/pink"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="41dp"
-            android:layout_height="41dp"
-            android:scaleType="fitXY"
-            android:src="@android:drawable/star_big_on"
-            app:shapeAppearanceOverlay="@style/cr40" />
-
-        <ImageView
-            android:layout_width="47dp"
-            android:layout_height="36dp"
-            android:scaleType="fitXY"
-            android:src="@android:drawable/star_big_on"
-            app:shapeAppearanceOverlay="@style/cr40" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:paddingBottom="40dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/timeHeader"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:background="@color/pink"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Pick your time slot &amp; duration."
-                android:textColor="#222222"
-                android:textSize="20sp"
+                android:text="Pick your time slot."
+                android:textColor="@color/white"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/headerDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="28 August 2026"
-                android:textColor="#222222"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="1 Hour\nR30pp" />
-
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="1.5 Hours\nR45pp" />
-
-            <Button
-                android:id="@+id/button10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="2 Hours\nR60pp" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/durationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginBottom="5dp"
-            android:text="available times"
-            android:textColor="#222222"
-            android:textSize="15sp" />
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Select Duration"
+            android:textColor="@color/darkColor"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeHeader" />
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/durationToggleGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"
+            app:checkedButton="@id/btn1Hour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/durationLabel"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <Button
-                android:id="@+id/button11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="10:00 AM" />
-
-            <Button
-                android:id="@+id/button12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="11:00 AM" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button13"
+            <!-- FIX: Added app:singleLine="false" and vertical padding -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn1Hour"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="12:00 PM" />
+                android:paddingVertical="8dp"
+                android:text="1 Hr\nR30pp"
+                android:textColor="@color/darkColor"
+                app:singleLine="false"
+                app:strokeColor="@color/pink" />
 
-            <Button
-                android:id="@+id/button14"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn15Hour"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="1:00 PM" />
-        </LinearLayout>
+                android:paddingVertical="8dp"
+                android:text="1.5 Hr\nR45pp"
+                android:textColor="@color/darkColor"
+                app:singleLine="false"
+                app:strokeColor="@color/pink" />
 
-        <LinearLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn2Hour"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingVertical="8dp"
+                android:text="2 Hr\nR60pp"
+                android:textColor="@color/darkColor"
+                app:singleLine="false"
+                app:strokeColor="@color/pink" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/timesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Available Times"
+            android:textColor="@color/darkColor"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/durationToggleGroup" />
+
+        <GridLayout
+            android:id="@+id/timeSlotGrid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            android:columnCount="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timesLabel">
 
-            <Button
-                android:id="@+id/button15"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime10"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="2:00 PM" />
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="10:00 AM"
+                android:textColor="@color/darkColor" />
 
-            <Button
-                android:id="@+id/button16"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime11"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/lightGrey"
-                android:textColor="@color/textColor"
-                android:text="3:00 PM" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="11:00 AM"
+                android:textColor="@color/darkColor" />
 
-        <Button
-            android:id="@+id/button17"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime12"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="12:00 PM"
+                android:textColor="@color/darkColor" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime1"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="1:00 PM"
+                android:textColor="@color/darkColor" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime2"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="2:00 PM"
+                android:textColor="@color/darkColor" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime3"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="3:00 PM"
+                android:textColor="@color/darkColor" />
+        </GridLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinueTime"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/pink"
-            android:textColor="@color/textColor"
-            android:layout_marginHorizontal="40dp"
-            android:text="Continue" />
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="32dp"
+            android:text="Continue"
+            android:textSize="16sp"
+            app:backgroundTint="@color/pink"
+            app:cornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeSlotGrid" />
 
-    </LinearLayout>
-
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

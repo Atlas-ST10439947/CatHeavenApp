@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.catheavenapp.HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_nav_home_to_bookingDateFragment"
+            app:destination="@id/bookingDateFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_cats"
+        android:name="com.example.catheavenapp.ResidentListFragment"
+        tools:layout="@layout/fragment_resident_list">
+        <action
+            android:id="@+id/action_catList_to_catItem"
+            app:destination="@id/catItemFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/catItemFragment"
+        android:name="com.example.catheavenapp.ResidentFragment"
+        tools:layout="@layout/fragment_resident" />
+
+    <fragment
+        android:id="@+id/nav_menu"
+        android:name="com.example.catheavenapp.MenuFragment"
+        tools:layout="@layout/fragment_menu" />
+
+    <fragment
+        android:id="@+id/nav_booking"
+        android:name="com.example.catheavenapp.UpcomingBookingsFragment"
+        tools:layout="@layout/fragment_upcoming_booking_list" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.catheavenapp.SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settings_to_profile"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_settings_to_notifs"
+            app:destination="@id/notifsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.catheavenapp.SettingsProfileFragment"
+        tools:layout="@layout/fragment_settings_profile" />
+
+    <fragment
+        android:id="@+id/notifsFragment"
+        android:name="com.example.catheavenapp.SettingsNotifsFragment"
+        tools:layout="@layout/fragment_settings_notifs" />
+
+    <fragment
+        android:id="@+id/bookingDateFragment"
+        android:name="com.example.catheavenapp.BookingDateFragment"
+        tools:layout="@layout/fragment_booking_date">
+        <action
+            android:id="@+id/action_bookingDate_to_bookingTime"
+            app:destination="@id/bookingTimeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingTimeFragment"
+        android:name="com.example.catheavenapp.BookingTimeFragment"
+        tools:layout="@layout/fragment_booking_time">
+        <action
+            android:id="@+id/action_bookingTime_to_bookingDetails"
+            app:destination="@id/bookingDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingDetailsFragment"
+        android:name="com.example.catheavenapp.BookingDetailsFragment"
+        tools:layout="@layout/fragment_booking_details">
+        <action
+            android:id="@+id/action_bookingDetails_to_bookingConfirm"
+            app:destination="@id/bookingConfirmFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingConfirmFragment"
+        android:name="com.example.catheavenapp.BookingConfirmFragment"
+        tools:layout="@layout/fragment_booking_confirm">
+        <action
+            android:id="@+id/action_bookingConfirm_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+</navigation>
