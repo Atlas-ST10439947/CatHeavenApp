@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-// import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -26,7 +26,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginButton.setOnClickListener {
-            // Courtney will add Firebase Auth validation here.
+            // TODO: Courtney will add Firebase Auth validation here.
             // On success, launch the main app experience:
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
@@ -34,7 +34,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.registerNavButton.setOnClickListener {
-            // findNavController().navigate(R.id.action_login_to_register)
+            findNavController().navigate(R.id.action_login_to_register)
         }
     }
 

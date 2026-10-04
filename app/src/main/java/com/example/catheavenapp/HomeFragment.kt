@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-// import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -26,7 +26,7 @@ class HomeFragment : Fragment() {
 
         // Route the main CTA straight into the booking flow
         binding.bookButton.setOnClickListener {
-            // findNavController().navigate(R.id.nav_booking)
+            findNavController().navigate(R.id.action_nav_home_to_bookingDateFragment)
         }
 
         binding.donateButton.setOnClickListener {

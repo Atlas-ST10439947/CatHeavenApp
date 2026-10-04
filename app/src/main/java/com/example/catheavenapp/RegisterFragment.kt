@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-// import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentRegisterBinding
 
 class RegisterFragment : Fragment() {
@@ -26,7 +26,7 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.registerSubmitButton.setOnClickListener {
-            // Courtney will extract binding.nameEditText.text, etc., to create the Firebase user.
+            // TODO: Courtney will extract binding details to create the Firebase user.
             // On success, route into the main app:
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
@@ -34,8 +34,7 @@ class RegisterFragment : Fragment() {
         }
 
         binding.loginNavButton.setOnClickListener {
-            // findNavController().navigate(R.id.action_register_to_login)
-            // or simply findNavController().popBackStack()
+            findNavController().navigate(R.id.action_register_to_login)
         }
     }
 

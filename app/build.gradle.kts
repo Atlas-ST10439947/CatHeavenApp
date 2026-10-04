@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.catheavenapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk =37
 
     buildFeatures {
         viewBinding = true
@@ -17,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.example.catheavenapp"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 

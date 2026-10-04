@@ -5,13 +5,15 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/nav_home">
 
-    <!-- Tab 1: Home Flow -->
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.catheavenapp.HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_nav_home_to_bookingDateFragment"
+            app:destination="@id/bookingDateFragment" />
+    </fragment>
 
-    <!-- Tab 2: Cats Flow -->
     <fragment
         android:id="@+id/nav_cats"
         android:name="com.example.catheavenapp.ResidentListFragment"
@@ -26,28 +28,23 @@
         android:name="com.example.catheavenapp.ResidentFragment"
         tools:layout="@layout/fragment_resident" />
 
-    <!-- Tab 3: Menu Flow -->
     <fragment
         android:id="@+id/nav_menu"
         android:name="com.example.catheavenapp.MenuFragment"
         tools:layout="@layout/fragment_menu" />
 
-    <!-- Tab 4: Booking Flow -->
     <fragment
         android:id="@+id/nav_booking"
         android:name="com.example.catheavenapp.UpcomingBookingsFragment"
         tools:layout="@layout/fragment_upcoming_booking_list" />
 
-    <!-- Tab 5: Profile/Settings Flow -->
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.catheavenapp.SettingsFragment"
         tools:layout="@layout/fragment_settings">
-        <!-- Route to Profile (which now includes Location) -->
         <action
             android:id="@+id/action_settings_to_profile"
             app:destination="@id/profileFragment" />
-        <!-- Route to Notifications -->
         <action
             android:id="@+id/action_settings_to_notifs"
             app:destination="@id/notifsFragment" />
@@ -62,5 +59,43 @@
         android:id="@+id/notifsFragment"
         android:name="com.example.catheavenapp.SettingsNotifsFragment"
         tools:layout="@layout/fragment_settings_notifs" />
+
+    <fragment
+        android:id="@+id/bookingDateFragment"
+        android:name="com.example.catheavenapp.BookingDateFragment"
+        tools:layout="@layout/fragment_booking_date">
+        <action
+            android:id="@+id/action_bookingDate_to_bookingTime"
+            app:destination="@id/bookingTimeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingTimeFragment"
+        android:name="com.example.catheavenapp.BookingTimeFragment"
+        tools:layout="@layout/fragment_booking_time">
+        <action
+            android:id="@+id/action_bookingTime_to_bookingDetails"
+            app:destination="@id/bookingDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingDetailsFragment"
+        android:name="com.example.catheavenapp.BookingDetailsFragment"
+        tools:layout="@layout/fragment_booking_details">
+        <action
+            android:id="@+id/action_bookingDetails_to_bookingConfirm"
+            app:destination="@id/bookingConfirmFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingConfirmFragment"
+        android:name="com.example.catheavenapp.BookingConfirmFragment"
+        tools:layout="@layout/fragment_booking_confirm">
+        <action
+            android:id="@+id/action_bookingConfirm_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

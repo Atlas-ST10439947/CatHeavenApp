@@ -70,14 +70,17 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
+            <!-- FIX: Added app:singleLine="false" and vertical padding -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn1Hour"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingVertical="8dp"
                 android:text="1 Hr\nR30pp"
                 android:textColor="@color/darkColor"
+                app:singleLine="false"
                 app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
@@ -86,8 +89,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingVertical="8dp"
                 android:text="1.5 Hr\nR45pp"
                 android:textColor="@color/darkColor"
+                app:singleLine="false"
                 app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
@@ -96,8 +101,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:paddingVertical="8dp"
                 android:text="2 Hr\nR60pp"
                 android:textColor="@color/darkColor"
+                app:singleLine="false"
                 app:strokeColor="@color/pink" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -126,66 +133,71 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timesLabel">
 
-            <!-- Time Slots -->
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime10"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:checkable="true"
                 android:text="10:00 AM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightGrey" />
+                android:textColor="@color/darkColor" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime11"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:checkable="true"
                 android:text="11:00 AM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightGrey" />
+                android:textColor="@color/darkColor" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime12"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:checkable="true"
                 android:text="12:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightGrey" />
+                android:textColor="@color/darkColor" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime1"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:checkable="true"
                 android:text="1:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightGrey" />
+                android:textColor="@color/darkColor" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime2"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:checkable="true"
                 android:text="2:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightGrey" />
+                android:textColor="@color/darkColor" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime3"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:checkable="true"
                 android:text="3:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightGrey" />
+                android:textColor="@color/darkColor" />
         </GridLayout>
 
         <com.google.android.material.button.MaterialButton

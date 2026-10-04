@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentBookingDetailsBinding
 
 class BookingDetailsFragment : Fragment() {
@@ -44,8 +45,8 @@ class BookingDetailsFragment : Fragment() {
         }
 
         binding.btnConfirmBooking.setOnClickListener {
-            // TODO: Wiehan will trigger Firebase write here
-            // findNavController().navigate(R.id.action_details_to_confirm)
+            // TODO: Wiehan will trigger the atomic Firestore write here before navigating
+            findNavController().navigate(R.id.action_bookingDetails_to_bookingConfirm)
         }
     }
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-// import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentBookingDateBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -35,8 +35,8 @@ class BookingDateFragment : Fragment() {
         }
 
         binding.btnContinueDate.setOnClickListener {
-            // TODO: Wiehan will hook up data passing here
-            // findNavController().navigate(R.id.action_date_to_time)
+            // Passes the flow to the Time Selection screen
+            findNavController().navigate(R.id.action_bookingDate_to_bookingTime)
         }
     }
 
