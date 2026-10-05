@@ -53,6 +53,7 @@ class LoginFragment : Fragment() {
                         }
                         .addOnFailureListener { openHome(MainActivity::class.java) }
                 }
+
                 .addOnFailureListener { exception ->
                     if (_binding == null) return@addOnFailureListener
                     binding.emailInputLayout.error = exception.localizedMessage ?: "Login failed"
