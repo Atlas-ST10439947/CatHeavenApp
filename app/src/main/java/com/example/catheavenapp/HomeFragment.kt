@@ -1,5 +1,7 @@
 package com.example.catheavenapp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,8 +31,12 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_home_to_bookingDateFragment)
         }
 
+        // Launch external browser for GivenGain donations
         binding.donateButton.setOnClickListener {
-            // Open an external browser link to GivenGain/EFT info as per Cat Heaven's current process
+            val url = "https://www.givengain.com/cause/rescue-cat-cafe-21339"
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
         }
     }
 

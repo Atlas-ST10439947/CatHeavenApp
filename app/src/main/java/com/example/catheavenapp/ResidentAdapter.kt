@@ -32,10 +32,21 @@ class ResidentAdapter(
 
     override fun onBindViewHolder(holder: ResidentViewHolder, position: Int) {
         val cat = cats[position]
+        val context = holder.itemView.context
+
         with(holder.binding) {
             textView6.text = cat.name
             imageView.contentDescription = "Photo of ${cat.name}"
-            // Photos stay the placeholder image: Cloud Storage needs the paid Blaze plan
+
+            // Load the image from res/drawable based on the Firestore string
+            val resourceId = context.resources.getIdentifier(cat.photoUrl, "drawable", context.packageName)
+
+            if (resourceId != 0) {
+                imageView.setImageResource(resourceId)
+            } else {
+                // Fallback if the filename in Firestore doesn't match a drawable
+                imageView.setImageResource(R.drawable.pawprint)
+            }
         }
     }
 

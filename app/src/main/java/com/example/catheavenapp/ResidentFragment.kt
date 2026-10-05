@@ -51,9 +51,19 @@ class ResidentFragment : Fragment() {
     }
 
     private fun showCat(cat: Cat) {
+        val context = binding.root.context
+
         binding.catNameText.text = cat.name
         binding.catStatusText.text = CatDescriptions.statusLabel(cat.adoptionStatus)
         binding.catPhoto.contentDescription = "Photo of ${cat.name}"
+
+        // Load the image for the detail view
+        val resourceId = context.resources.getIdentifier(cat.photoUrl, "drawable", context.packageName)
+        if (resourceId != 0) {
+            binding.catPhoto.setImageResource(resourceId)
+        } else {
+            binding.catPhoto.setImageResource(R.drawable.pawprint)
+        }
 
         binding.catFactsText.text = listOfNotNull(
             cat.breed.ifBlank { null },

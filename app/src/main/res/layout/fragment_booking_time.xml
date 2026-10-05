@@ -76,10 +76,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/lightPink"
                 android:paddingVertical="8dp"
                 android:text="1 Hr\nR120pp"
-                android:textColor="@color/darkColor"
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
                 app:singleLine="false"
                 app:strokeColor="@color/pink" />
 
@@ -91,7 +91,8 @@
                 android:layout_weight="1"
                 android:paddingVertical="8dp"
                 android:text="1.5 Hr\nR170pp"
-                android:textColor="@color/darkColor"
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
                 app:singleLine="false"
                 app:strokeColor="@color/pink" />
 
@@ -103,7 +104,8 @@
                 android:layout_weight="1"
                 android:paddingVertical="8dp"
                 android:text="2 Hr\nR220pp"
-                android:textColor="@color/darkColor"
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
                 app:singleLine="false"
                 app:strokeColor="@color/pink" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -122,7 +124,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/durationToggleGroup" />
 
-        <!-- Filled at runtime with one button per timeslot (see item_time_slot.xml) -->
         <GridLayout
             android:id="@+id/timeSlotGrid"
             android:layout_width="match_parent"
@@ -136,75 +137,81 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime10"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="10:00 AM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightPink" />
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
+                app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime11"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="11:00 AM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightPink" />
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
+                app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime12"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="12:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightPink"/>
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
+                app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime1"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="1:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightPink"/>
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
+                app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime2"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="2:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightPink"/>
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
+                app:strokeColor="@color/pink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime3"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="3:00 PM"
-                android:textColor="@color/darkColor"
-                app:backgroundTint="@color/lightPink"/>
+                android:textColor="@color/selector_toggle_text"
+                app:backgroundTint="@color/selector_toggle_bg"
+                app:strokeColor="@color/pink" />
         </GridLayout>
 
         <com.google.android.material.button.MaterialButton
