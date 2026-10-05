@@ -82,7 +82,6 @@
                         android:textColor="@color/darkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Status Toggle -->
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switchOpenStatus"
                     android:layout_width="match_parent"

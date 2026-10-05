@@ -70,14 +70,13 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <!-- FIX: Added app:singleLine="false" and vertical padding -->
-            <!-- Button text is replaced at runtime with the live prices -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn1Hour"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="@color/lightPink"
                 android:paddingVertical="8dp"
                 android:text="1 Hr\nR120pp"
                 android:textColor="@color/darkColor"
@@ -133,7 +132,80 @@
             android:columnCount="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timesLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/timesLabel">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime10"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="10:00 AM"
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime11"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="11:00 AM"
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime12"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="12:00 PM"
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime1"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="1:00 PM"
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime2"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="2:00 PM"
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTime3"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:checkable="true"
+                android:text="3:00 PM"
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
+        </GridLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinueTime"
