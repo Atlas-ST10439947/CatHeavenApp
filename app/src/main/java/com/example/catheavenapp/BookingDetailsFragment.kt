@@ -13,7 +13,9 @@ import com.example.catheavenapp.domain.booking.BookingDraft
 import com.example.catheavenapp.domain.booking.BookingValidator
 import com.example.catheavenapp.domain.booking.formatHours
 import com.example.catheavenapp.ui.booking.BookingFlowViewModel
+import com.example.catheavenapp.ui.booking.SubmitState
 import com.example.catheavenapp.ui.booking.formatGuests
+import com.google.android.material.snackbar.Snackbar
 
 class BookingDetailsFragment : Fragment() {
 
@@ -54,9 +56,31 @@ class BookingDetailsFragment : Fragment() {
                 phone = binding.inputPhone.text?.toString().orEmpty()
             )
 
-            // Next step (feature/booking-transaction): submit the draft through the
-            // Firestore booking transaction before navigating to the confirmation.
-            findNavController().navigate(R.id.action_bookingDetails_to_bookingConfirm)
+            // Writes the booking through the Firestore transaction.
+            // The observer below navigates once it has been saved.
+            bookingViewModel.submitBooking()
+        }
+
+        bookingViewModel.submitState.observe(viewLifecycleOwner) { state ->
+            val button = binding.btnConfirmBooking
+            when (state) {
+                SubmitState.Submitting -> {
+                    button.isEnabled = false   // stops a double tap from booking twice
+                    button.text = "Booking…"
+                }
+                SubmitState.Succeeded ->
+                    findNavController().navigate(R.id.action_bookingDetails_to_bookingConfirm)
+                is SubmitState.Failed -> {
+                    button.isEnabled = true
+                    button.text = "Confirm Booking"
+                    Snackbar.make(binding.root, state.message, Snackbar.LENGTH_LONG).show()
+                    bookingViewModel.onSubmitErrorShown()
+                }
+                SubmitState.Idle -> {
+                    button.isEnabled = true
+                    button.text = "Confirm Booking"
+                }
+            }
         }
     }
 

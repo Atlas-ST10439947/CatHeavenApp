@@ -78,7 +78,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/lightPink"
                 android:paddingVertical="8dp"
-                android:text="1 Hr\nR30pp"
+                android:text="1 Hr\nR120pp"
                 android:textColor="@color/darkColor"
                 app:singleLine="false"
                 app:strokeColor="@color/pink" />
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingVertical="8dp"
-                android:text="1.5 Hr\nR45pp"
+                android:text="1.5 Hr\nR170pp"
                 android:textColor="@color/darkColor"
                 app:singleLine="false"
                 app:strokeColor="@color/pink" />
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingVertical="8dp"
-                android:text="2 Hr\nR60pp"
+                android:text="2 Hr\nR220pp"
                 android:textColor="@color/darkColor"
                 app:singleLine="false"
                 app:strokeColor="@color/pink" />
@@ -122,6 +122,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/durationToggleGroup" />
 
+        <!-- Filled at runtime with one button per timeslot (see item_time_slot.xml) -->
         <GridLayout
             android:id="@+id/timeSlotGrid"
             android:layout_width="match_parent"

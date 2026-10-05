@@ -90,4 +90,21 @@
         app:layout_constraintTop_toBottomOf="@+id/bookingToggleGroup"
         tools:listitem="@layout/fragment_upcoming_booking" />
 
+    <!-- Shown while loading, on errors, and when a tab has no bookings -->
+    <TextView
+        android:id="@+id/emptyStateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:textColor="@color/textColor"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bookingToggleGroup"
+        tools:text="No upcoming bookings yet."
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

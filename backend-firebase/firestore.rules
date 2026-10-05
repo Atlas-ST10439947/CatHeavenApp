@@ -6,12 +6,40 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-   function isAdmin() {
-  return signedIn() && request.auth.token.get('admin', false) == true;
-}
+    // An admin either has the 'admin' custom claim, or role == 'admin' on their
+    // users document. Users can't set or change their own role (see /users below),
+    // so only someone with Firebase console access can make an account an admin.
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.get('admin', false) == true
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'admin')
+      );
+    }
 
     function isOwner(uid) {
       return signedIn() && request.auth.uid == uid;
+    }
+
+    // A supporter may only change a timeslot as part of the booking transaction.
+    // The rise in bookedCount must equal the guests on a booking created in the
+    // same write, the slot must stay within capacity, and status must flip to
+    // 'full' exactly when capacity is reached. Nothing else on the slot may change.
+    function isBookingIncrement(timeslotId) {
+      let before = resource.data;
+      let after = request.resource.data;
+      let bookingPath = /databases/$(database)/documents/bookings/$(after.lastBookingId);
+      let booking = getAfter(bookingPath).data;
+      let newCount = before.bookedCount + booking.numberOfGuests;
+      return signedIn()
+        && after.diff(before).affectedKeys().hasOnly(['bookedCount', 'status', 'lastBookingId'])
+        && before.status == 'open'
+        && !exists(bookingPath)
+        && booking.timeslotId == timeslotId
+        && booking.supporterId == request.auth.uid
+        && after.bookedCount == newCount
+        && newCount <= before.capacity
+        && after.status == (newCount >= before.capacity ? 'full' : 'open');
     }
 
     // Public catalogue - anyone can read, only admins can write
@@ -27,7 +55,8 @@ service cloud.firestore {
 
     match /timeslots/{timeslotId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || isBookingIncrement(timeslotId);
     }
 
     match /pricingTiers/{tierId} {
@@ -58,15 +87,22 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Bookings - supporters can create their own, capped at 8 guests
+    // Bookings - supporters create their own, 1 to 8 guests, and only together
+    // with the matching timeslot update (see isBookingIncrement above)
     match /bookings/{bookingId} {
       allow read: if isAdmin() ||
                      (signedIn() && resource.data.supporterId == request.auth.uid);
 
       allow create: if signedIn()
                     && request.resource.data.supporterId == request.auth.uid
+                    && request.resource.data.numberOfGuests > 0
                     && request.resource.data.numberOfGuests <= 8
-                    && request.resource.data.numberOfGuests > 0;
+                    && request.resource.data.status == 'confirmed'
+                    && request.resource.data.totalDue ==
+                         request.resource.data.pricePerPerson * request.resource.data.numberOfGuests
+                    && request.resource.data.createdAt == request.time
+                    && getAfter(/databases/$(database)/documents/timeslots/$(request.resource.data.timeslotId))
+                         .data.lastBookingId == bookingId;
 
       allow update, delete: if isAdmin();
     }

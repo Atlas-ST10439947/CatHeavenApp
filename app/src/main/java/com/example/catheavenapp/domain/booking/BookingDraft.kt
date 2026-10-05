@@ -53,18 +53,26 @@ data class BookingDraft(
     val guests: Int = 1,
     val fullName: String = "",
     val email: String = "",
-    val phone: String = ""
+    val phone: String = "",
+    val timeslotId: String? = null   // the timeslots/{id} document being booked
 ) {
     val hasDate: Boolean get() = date != null
     val hasTime: Boolean get() = date != null && startTime != null
 
-    /** Changing the day clears the chosen time, because availability differs per day. */
+    /** True once a real timeslot document has been chosen, so the booking can be written. */
+    val hasTimeslot: Boolean get() = hasTime && timeslotId != null
+
+    /** Changing the day clears the chosen slot, because availability differs per day. */
     fun withDate(newDate: VisitDate): BookingDraft =
-        if (newDate == date) this else copy(date = newDate, startTime = null)
+        if (newDate == date) this else copy(date = newDate, startTime = null, timeslotId = null)
 
     fun withDuration(hours: Double): BookingDraft = copy(durationHours = hours)
 
     fun withStartTime(time: String): BookingDraft = copy(startTime = time)
+
+    /** Selects a specific timeslot document and remembers its start time for display. */
+    fun withTimeslot(id: String, startTime: String): BookingDraft =
+        copy(timeslotId = id, startTime = startTime)
 
     fun addGuest(max: Int = BookingValidator.MAX_GUESTS): BookingDraft =
         if (guests < max) copy(guests = guests + 1) else this
