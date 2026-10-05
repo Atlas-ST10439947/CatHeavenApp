@@ -58,7 +58,7 @@ class BookingValidator(
                 BookingError.NotesTooLong(request.specialNotes.length, maxNotesLength)
             )
         }
-        val tier = pricingTiers.firstOrNull { it.isActive && it.durationHours == request.durationHours }
+        val tier = PricingCalculator.tierFor(pricingTiers, request.durationHours)
             ?: return ValidationResult.Invalid(BookingError.UnknownDuration(request.durationHours))
 
         return ValidationResult.Valid(

@@ -1,20 +1,26 @@
 package com.example.catheavenapp
 
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentBookingDetailsBinding
+import com.example.catheavenapp.domain.booking.BookingDraft
+import com.example.catheavenapp.domain.booking.BookingValidator
+import com.example.catheavenapp.domain.booking.formatHours
+import com.example.catheavenapp.ui.booking.BookingFlowViewModel
+import com.example.catheavenapp.ui.booking.formatGuests
 
 class BookingDetailsFragment : Fragment() {
 
     private var _binding: FragmentBookingDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private var guestCount = 1
-    private val pricePerPerson = 30 // Example base price for 1 Hour
+    private val bookingViewModel: BookingFlowViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,37 +33,74 @@ class BookingDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        updateGuestUI()
-
-        // Restrict to max 8 guests per Cat Heaven rules
-        binding.btnAddGuest.setOnClickListener {
-            if (guestCount < 8) {
-                guestCount++
-                updateGuestUI()
-            }
+        // Refill contact details if the user comes back to this screen
+        bookingViewModel.draft.value?.let { draft ->
+            if (draft.fullName.isNotEmpty()) binding.inputName.setText(draft.fullName)
+            if (draft.email.isNotEmpty()) binding.inputEmail.setText(draft.email)
+            if (draft.phone.isNotEmpty()) binding.inputPhone.setText(draft.phone)
         }
 
-        binding.btnMinusGuest.setOnClickListener {
-            if (guestCount > 1) {
-                guestCount--
-                updateGuestUI()
-            }
-        }
+        binding.btnAddGuest.setOnClickListener { bookingViewModel.addGuest() }
+        binding.btnMinusGuest.setOnClickListener { bookingViewModel.removeGuest() }
+
+        bookingViewModel.draft.observe(viewLifecycleOwner) { render(it) }
 
         binding.btnConfirmBooking.setOnClickListener {
-            // TODO: Wiehan will trigger the atomic Firestore write here before navigating
+            if (!contactDetailsAreValid()) return@setOnClickListener
+
+            bookingViewModel.updateContact(
+                fullName = binding.inputName.text?.toString().orEmpty(),
+                email = binding.inputEmail.text?.toString().orEmpty(),
+                phone = binding.inputPhone.text?.toString().orEmpty()
+            )
+
+            // Next step (feature/booking-transaction): submit the draft through the
+            // Firestore booking transaction before navigating to the confirmation.
             findNavController().navigate(R.id.action_bookingDetails_to_bookingConfirm)
         }
     }
 
-    private fun updateGuestUI() {
-        val guestString = if (guestCount == 1) "1 Guest" else "$guestCount Guests"
-        binding.guestCountText.text = guestString
+    private fun render(draft: BookingDraft) {
+        val guests = formatGuests(draft.guests)
+        binding.guestCountText.text = guests
 
-        val total = guestCount * pricePerPerson
-        binding.summaryDetails.text = "1 hour x $guestString"
-        binding.summaryCalculation.text = "R$pricePerPerson x $guestCount"
-        binding.summaryTotal.text = "R$total"
+        // Disable the +/- buttons at the limits instead of silently ignoring taps
+        binding.btnAddGuest.isEnabled = draft.guests < BookingValidator.MAX_GUESTS
+        binding.btnMinusGuest.isEnabled = draft.guests > 1
+
+        val hours = formatHours(draft.durationHours)
+        val unit = if (draft.durationHours == 1.0) "hour" else "hours"
+        binding.summaryDetails.text = "$hours $unit x $guests"
+
+        val quote = bookingViewModel.quoteFor(draft)
+        if (quote != null) {
+            binding.summaryCalculation.text = "R${quote.pricePerPerson} x ${draft.guests}"
+            binding.summaryTotal.text = "R${quote.total}"
+        } else {
+            binding.summaryCalculation.text = "-"
+            binding.summaryTotal.text = "Unavailable"
+        }
+    }
+
+    private fun contactDetailsAreValid(): Boolean {
+        val name = binding.inputName.text?.toString()?.trim().orEmpty()
+        val email = binding.inputEmail.text?.toString()?.trim().orEmpty()
+        val phone = binding.inputPhone.text?.toString()?.trim().orEmpty()
+        var valid = true
+
+        if (name.isEmpty()) {
+            binding.inputName.error = "Please enter your name"
+            valid = false
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.inputEmail.error = "Please enter a valid email address"
+            valid = false
+        }
+        if (phone.length < 10) {
+            binding.inputPhone.error = "Please enter a valid phone number"
+            valid = false
+        }
+        return valid
     }
 
     override fun onDestroyView() {
