@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "663823396909",
+    "project_id": "catheaven-dev",
+    "storage_bucket": "catheaven-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663823396909:android:1a930a7b420b22a398c8a4",
+        "android_client_info": {
+          "package_name": "com.example.catheavenapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZKCNapY9roa1noIACaA00URkYmLfLF_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
