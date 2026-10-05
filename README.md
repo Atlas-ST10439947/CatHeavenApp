@@ -4,6 +4,9 @@ An Android app and Firebase backend for Cat Heaven, a South African Rescue Cat C
 
 Built by Echo Solutions for INSY7315 (Task 2: Code and Implementation).
 
+### App Presentation & Demo Video Link
+
+
 > All cat, shop and menu data is placeholder data pending final confirmation from Cat Heaven. An administrator can edit it at any time without any structural change.
 
 ## Contents
@@ -24,10 +27,10 @@ Built by Echo Solutions for INSY7315 (Task 2: Code and Implementation).
 - [Hosting Deployment and Stability Rationale](#Hosting Deployment and Stability Rationale)
 
 ## Team and responsibilities
-| Member | Main responsibilities |
-| Amelia Swart (Atlas) | Front end: visual design, UX and feedback, responsiveness and accessibility; presentation and demo |
-| Courtney Martin | Database, security rules, authentication, Firebase hosting and deployment rationale |
-| Wiehan Smit | Booking logic and data flow, APIs, programming structure, CI/CD pipeline |
+| Member | Main responsibilities |  
+| Amelia Swart (Atlas)  - ST10439947 | Front end: visual design, UX and feedback, responsiveness and accessibility; presentation and demo |  
+| Courtney Martin - ST10439401 | Database, security rules, authentication, Firebase hosting and deployment rationale |  
+| Wiehan Smit - ST10446545 | Booking logic and data flow, APIs, programming structure, CI/CD pipeline |  
 
 ## Team attendance and communication
 
@@ -48,10 +51,10 @@ We used the WhatsApp group chat for coordination, for example:
 - Pull requests are reviewed by a teammate before they are merged into `main`.
 
 ### Attendance record
-| Date | Session type | Medium | Amelia | Courtney | Wiehan |
-| `22/09/20206` | Part 2 starting meeting | In person | Present | Present | Present |
-| `<28/09/2026>` | Internal group meeting | online | Present | Present | Present | 
-| `<1/10/2026>` | Internal group meeting | online | Present | Present | Present |
+| Date | Session type | Medium | Amelia | Courtney | Wiehan |   
+| `22/09/20206` | Part 2 starting meeting | In person | Present | Present | Present |  
+| `<28/09/2026>` | Internal group meeting | online | Present | Present | Present |   
+| `<1/10/2026>` | Internal group meeting | online | Present | Present | Present |   
 
 
 ## Features and screens
@@ -76,12 +79,12 @@ Admins (a separate admin area, reached automatically after an admin logs in)
 - Build and CI: Gradle (Android Gradle Plugin 9.3.3), GitHub Actions
 
 ## Repository structure
-| Path | Purpose |
-| `app/` | The Android application |
-| `app/google-services.json` | Firebase config for the app |
-| `backend-firebase/` | Firestore rules, indexes, rules tests, admin script and hosting page |
-| `backend-firebase/docs/evidence/` | Screenshots used in this README |
-| `.github/workflows/android-ci.yml` | CI pipeline |
+| Path | Purpose |  
+| `app/` | The Android application |  
+| `app/google-services.json` | Firebase config for the app |  
+| `backend-firebase/` | Firestore rules, indexes, rules tests, admin script and hosting page |  
+| `backend-firebase/docs/evidence/` | Screenshots used in this README |  
+| `.github/workflows/android-ci.yml` | CI pipeline |  
 
 ## Getting started
 
@@ -123,22 +126,22 @@ firebase deploy --only hosting
 ## Test accounts
 Dev-only accounts for the `catheaven-dev` Firebase project.
 
-| Role | Email | Password | Lands on |
-| Admin | `admin@test.com` | `Test1234!` | Admin screens |
-| Supporter | `supporter@test.com` | `P123456/` | Main app |
+| Role | Email | Password | Lands on |  
+| Admin | `admin@test.com` | `Test1234!` | Admin screens |  
+| Supporter | `supporter@test.com` | `P123456/` | Main app |  
 
 ## Backend: database
 Cloud Firestore (Standard edition) in the South Africa region, which became available after Task 1 was written and gives lower latency for local users than the originally planned europe-west.
 
-| Collection | Purpose | Notes |
-| `cats` | Resident cat profiles | `updates` subcollection holds each cat's news posts |
-| `timeslots` | Bookable visit and snack-time slots | Holds `capacity` and `bookedCount` |
-| `pricingTiers` | Visit durations and price per person | Quoted price only, no payments are stored |
-| `categories` / `products` | Gift shop display | Display only, no online purchasing |
-| `menuItems` | Cafe menu | Display only |
-| `users` | One profile per Firebase Auth account | Document ID equals the Auth UID |
-| `bookings` | Visit bookings | Created by the app at runtime |
-| `pawParentEnrolments` | Supporter-to-cat sponsorship links | Created by the app at runtime |
+| Collection | Purpose | Notes |  
+| `cats` | Resident cat profiles | `updates` subcollection holds each cat's news posts |  
+| `timeslots` | Bookable visit and snack-time slots | Holds `capacity` and `bookedCount` |  
+| `pricingTiers` | Visit durations and price per person | Quoted price only, no payments are stored |  
+| `categories` / `products` | Gift shop display | Display only, no online purchasing |  
+| `menuItems` | Cafe menu | Display only |  
+| `users` | One profile per Firebase Auth account | Document ID equals the Auth UID |  
+| `bookings` | Visit bookings | Created by the app at runtime |  
+| `pawParentEnrolments` | Supporter-to-cat sponsorship links | Created by the app at runtime |  
 
 Design decisions:
 - Denormalisation: fields such as `categoryName` on a product and `supporterName` on a booking are copied so list screens need one query instead of several joins.
@@ -149,11 +152,11 @@ Design decisions:
 ## Backend: security
 All access is decided server-side by `backend-firebase/firestore.rules`, and client code is treated as untrusted.
 
-| Collection | Anonymous | Signed-in supporter | Admin |
-| `cats`, `timeslots`, `pricingTiers`, `categories`, `products`, `menuItems` | Read | Read | Read and write |
-| `users` | None | Read and update own profile only | Read any profile |
-| `bookings` | None | Create own (1 to 8 guests), read own | Read, update, delete all |
-| `pawParentEnrolments` | None | Create own, read own, cancel own | Full access |
+| Collection | Anonymous | Signed-in supporter | Admin |  
+| `cats`, `timeslots`, `pricingTiers`, `categories`, `products`, `menuItems` | Read | Read | Read and write |  
+| `users` | None | Read and update own profile only | Read any profile |  
+| `bookings` | None | Create own (1 to 8 guests), read own | Read, update, delete all |  
+| `pawParentEnrolments` | None | Create own, read own, cancel own | Full access |  
 
 Key points:
 - Admin rights come from a custom claim (`admin: true`) set with the Firebase Admin SDK (`setAdmin.js`), not from a field in the database. A client cannot grant itself admin.
