@@ -1,4 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme (light mode; values-night overrides for dark) -->
+    <style name="Base.Theme.CatHeavenApp" parent="Theme.Material3.DayNight.NoActionBar" />
+
     <style name="Theme.CatHeavenApp" parent="Base.Theme.CatHeavenApp" />
 
     <style name="Theme.CatHeavenApp.Launcher" parent="Theme.CatHeavenApp">
