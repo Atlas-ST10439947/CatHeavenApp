@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One supporter in the admin's Supporter Directory -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/lightGrey"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/userRoleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@color/pink"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="SUPPORTER" />
+
+        <TextView
+            android:id="@+id/userNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/darkColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="Jane Smith" />
+
+        <TextView
+            android:id="@+id/userEmailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/textColor"
+            android:textSize="15sp"
+            tools:text="jane@example.com" />
+
+        <TextView
+            android:id="@+id/userDetailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            tools:text="0821234567  ·  Joined 05 October 2026" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

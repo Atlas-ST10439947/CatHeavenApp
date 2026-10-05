@@ -66,10 +66,11 @@ class BookingTimeFragment : Fragment() {
             binding.btn15Hour to 1.5,
             binding.btn2Hour to 2.0
         )
-
-        // Show the live price on each button, and disable lengths with no active tier
+// Show the live price on each button, and disable lengths with no active tier
         bookingViewModel.pricingTiers.observe(viewLifecycleOwner) { tiers ->
             durationButtons.forEach { (button, hours) ->
+                button.isSingleLine = false   // allow the price on a second line
+                button.maxLines = 2
                 val tier = PricingCalculator.tierFor(tiers, hours)
                 button.text = if (tier != null) {
                     "${formatHours(hours)} Hr\nR${tier.pricePerPerson}pp"

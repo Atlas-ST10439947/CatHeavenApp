@@ -6,8 +6,15 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    // An admin either has the 'admin' custom claim, or role == 'admin' on their
+    // users document. Users can't set or change their own role (see /users below),
+    // so only someone with Firebase console access can make an account an admin.
     function isAdmin() {
-      return signedIn() && request.auth.token.get('admin', false) == true;
+      return signedIn() && (
+        request.auth.token.get('admin', false) == true
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'admin')
+      );
     }
 
     function isOwner(uid) {

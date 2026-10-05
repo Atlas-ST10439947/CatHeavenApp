@@ -64,6 +64,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchUserLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/searchUserLayout"
+        tools:listitem="@layout/item_admin_user" />
+
+    <!-- Shown while loading, on errors, and when nothing matches the search -->
+    <TextView
+        android:id="@+id/emptyStateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:textColor="@color/textColor"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchUserLayout"
+        tools:text="Loading supporters…"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
