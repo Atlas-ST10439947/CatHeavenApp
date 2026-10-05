@@ -36,11 +36,17 @@ class LoginFragment : Fragment() {
             }
 
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
+                .addOnSuccessListener { authResult ->
+                    authResult.user?.getIdToken(true)?.addOnSuccessListener { tokenResult ->
+                        val isAdmin = tokenResult.claims["admin"] == true
+                        val destination = if (isAdmin) AdminActivity::class.java else MainActivity::class.java
+                        startActivity(Intent(requireContext(), destination))
+                        requireActivity().finish()
+                    }?.addOnFailureListener {
+                        _binding?.emailInputLayout?.error = "Could not verify account role"
+                    }
                 }
+
                 .addOnFailureListener { exception ->
                     binding.emailInputLayout.error = exception.localizedMessage ?: "Login failed"
                 }
