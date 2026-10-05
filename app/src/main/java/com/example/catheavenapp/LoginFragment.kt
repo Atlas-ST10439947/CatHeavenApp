@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginFragment : Fragment() {
 
@@ -36,18 +37,25 @@ class LoginFragment : Fragment() {
             }
 
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener { authResult ->
-                    authResult.user?.getIdToken(true)?.addOnSuccessListener { tokenResult ->
-                        val isAdmin = tokenResult.claims["admin"] == true
-                        val destination = if (isAdmin) AdminActivity::class.java else MainActivity::class.java
-                        startActivity(Intent(requireContext(), destination))
-                        requireActivity().finish()
-                    }?.addOnFailureListener {
-                        _binding?.emailInputLayout?.error = "Could not verify account role"
+                .addOnSuccessListener { result ->
+                    val uid = result.user?.uid
+                    if (uid == null) {
+                        openHome(MainActivity::class.java)
+                        return@addOnSuccessListener
                     }
+                    // Admins go to the admin dashboard, everyone else to the supporter app.
+                    // This only decides which screens to show: the security rules still
+                    // check admin rights on every admin read and write.
+                    FirebaseFirestore.getInstance().collection("users").document(uid).get()
+                        .addOnSuccessListener { doc ->
+                            val isAdmin = doc.getString("role") == "admin"
+                            openHome(if (isAdmin) AdminActivity::class.java else MainActivity::class.java)
+                        }
+                        .addOnFailureListener { openHome(MainActivity::class.java) }
                 }
 
                 .addOnFailureListener { exception ->
+                    if (_binding == null) return@addOnFailureListener
                     binding.emailInputLayout.error = exception.localizedMessage ?: "Login failed"
                 }
         }
@@ -55,6 +63,12 @@ class LoginFragment : Fragment() {
         binding.registerNavButton.setOnClickListener {
             findNavController().navigate(R.id.action_login_to_register)
         }
+    }
+
+    private fun openHome(target: Class<*>) {
+        if (!isAdded) return   // the user left this screen while signing in
+        startActivity(Intent(requireContext(), target))
+        requireActivity().finish()
     }
 
     override fun onDestroyView() {
