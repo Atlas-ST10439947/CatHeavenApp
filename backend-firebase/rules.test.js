@@ -75,6 +75,16 @@ await assertSucceeds(
 );
 console.log("PASS: admin user can read another user's profile");
 
+const newUser = testEnv.authenticatedContext("new-user-1", {});
+await assertFails(
+  newUser.firestore().collection("users").doc("new-user-1").set({ fullName: "Sneaky", email: "s@example.com", role: "admin" })
+);
+console.log("PASS: user cannot self-assign admin role");
+await assertSucceeds(
+  newUser.firestore().collection("users").doc("new-user-1").set({ fullName: "Normal", email: "n@example.com", role: "supporter" })
+);
+console.log("PASS: user can register as a supporter");
+
   await testEnv.cleanup();
   console.log("All tests passed.");
 }
