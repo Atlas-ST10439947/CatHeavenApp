@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentSettingsBinding
+import com.google.firebase.auth.FirebaseAuth
+import android.content.Intent
+
 
 class SettingsFragment : Fragment() {
 
@@ -33,7 +36,10 @@ class SettingsFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
-            // TODO: Courtney will trigger Firebase.auth.signOut() here and route back to Login
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(requireContext(), LaunchActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
         }
     }
 

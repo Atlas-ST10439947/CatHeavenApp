@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentAdminBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class AdminFragment : Fragment() {
 
@@ -42,7 +43,8 @@ class AdminFragment : Fragment() {
         }
 
         binding.btnAdminLogout.setOnClickListener {
-            // Courtney will trigger Firebase Auth logout here
+            FirebaseAuth.getInstance().signOut()
+
             val intent = Intent(requireContext(), LaunchActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
