@@ -14,4 +14,11 @@
         <item name="colorSecondaryContainer">@color/pink</item>
     </style>
 
+    <style name="PinkCalendarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/pink</item>
+        <item name="colorPrimary">@color/pink</item>
+
+        <item name="android:textColorPrimary">@color/textColor</item>
+    </style>
+
 </resources>

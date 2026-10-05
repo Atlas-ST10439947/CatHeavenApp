@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Resident Cats"
-            android:textColor="@color/darkColor"
+            android:textColor="@color/selector_toggle_text"
+            app:backgroundTint="@color/selector_toggle_bg"
             app:strokeColor="@color/pink" />
 
         <com.google.android.material.button.MaterialButton
@@ -58,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cafe Menu"
-            android:textColor="@color/darkColor"
+            android:textColor="@color/selector_toggle_text"
+            app:backgroundTint="@color/selector_toggle_bg"
             app:strokeColor="@color/pink" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

@@ -39,7 +39,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Toggle Buttons (Upcoming vs Past) -->
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/bookingToggleGroup"
         android:layout_width="0dp"
@@ -60,9 +59,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Upcoming"
-            android:textColor="@color/darkColor"
-            app:strokeColor="@color/pink"
-            app:backgroundTint="@color/lightPink"/>
+            android:textColor="@color/selector_toggle_text"
+            app:backgroundTint="@color/selector_toggle_bg"
+            app:strokeColor="@color/pink" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPast"
@@ -71,7 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Past"
-            android:textColor="@color/darkColor"
+            android:textColor="@color/selector_toggle_text"
+            app:backgroundTint="@color/selector_toggle_bg"
             app:strokeColor="@color/pink" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

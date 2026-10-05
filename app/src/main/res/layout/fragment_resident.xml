@@ -10,6 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="180dp"
         android:layout_height="180dp"
+        android:padding="15dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/cats" />
 
@@ -17,7 +18,8 @@
         android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
         android:text="Cat Name"
-        android:textSize="20sp"
-        android:paddingHorizontal="20dp"/>
+        android:textColor="@color/textColor"
+        android:textSize="20sp" />
 </LinearLayout>
