@@ -24,6 +24,15 @@ testEnv = await initializeTestEnvironment({
       adoptionStatus: "resident",
     });
   });
+
+  // Seed a sample user profile, bypassing rules
+await testEnv.withSecurityRulesDisabled(async (context) => {
+  await context.firestore().collection("users").doc("some-other-user").set({
+    fullName: "Jane Supporter",
+    email: "jane@example.com",
+    role: "supporter",
+  });
+});
 }
 
 async function runTests() {
@@ -53,6 +62,18 @@ async function runTests() {
     })
   );
   console.log("PASS: admin user can edit a cat profile");
+
+  // Test 4: a regular (non-admin) user CANNOT read someone else's profile
+await assertFails(
+  regularUser.firestore().collection("users").doc("some-other-user").get()
+);
+console.log("PASS: non-admin user is blocked from reading another user's profile");
+
+// Test 5: an admin CAN read someone else's profile
+await assertSucceeds(
+  adminUser.firestore().collection("users").doc("some-other-user").get()
+);
+console.log("PASS: admin user can read another user's profile");
 
   await testEnv.cleanup();
   console.log("All tests passed.");

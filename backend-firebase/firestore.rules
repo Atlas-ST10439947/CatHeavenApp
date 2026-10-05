@@ -52,10 +52,11 @@ service cloud.firestore {
 
     // User accounts - only the account owner can read/update their own profile
     match /users/{uid} {
-      allow read, update: if isOwner(uid);
-      allow create: if isOwner(uid);
-      allow delete: if isAdmin();
-    }
+  allow read: if isOwner(uid) || isAdmin();
+  allow update: if isOwner(uid);
+  allow create: if isOwner(uid);
+  allow delete: if isAdmin();
+}
 
     // Bookings - supporters can create their own, capped at 8 guests
     match /bookings/{bookingId} {
