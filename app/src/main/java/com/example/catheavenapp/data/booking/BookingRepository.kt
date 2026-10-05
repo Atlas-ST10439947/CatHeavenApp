@@ -7,6 +7,7 @@ import com.example.catheavenapp.domain.booking.BookingRejection
 import com.example.catheavenapp.domain.booking.PriceQuote
 import com.example.catheavenapp.domain.booking.VisitDate
 import com.example.catheavenapp.domain.model.Booking
+import com.example.catheavenapp.domain.model.BookingStatus
 import com.example.catheavenapp.domain.model.SlotType
 import com.example.catheavenapp.domain.model.Timeslot
 import com.example.catheavenapp.domain.model.TimeslotStatus
@@ -25,6 +26,9 @@ interface BookingRepository {
 
     /** Books the draft's timeslot atomically. Throws [BookingRejectedException] if it can't. */
     suspend fun createBooking(draft: BookingDraft, quote: PriceQuote?): Booking
+
+    /** Every booking made by the signed-in supporter, in no particular order. */
+    suspend fun myBookings(): List<Booking>
 }
 
 class BookingRejectedException(val rejection: BookingRejection) : Exception(rejection.message)
@@ -90,6 +94,18 @@ class FirestoreBookingRepository(
         }
     }
 
+    override suspend fun myBookings(): List<Booking> {
+        val user = auth.currentUser ?: throw NotSignedInException()
+        // The supporterId filter is required: the rules only let supporters read their own
+        // bookings, and Firestore rejects a query that could return anyone else's.
+        // Sorting happens on the phone, so no composite index is needed.
+        val snapshot = db.collection(BOOKINGS)
+            .whereEqualTo("supporterId", user.uid)
+            .get()
+            .await()
+        return snapshot.documents.mapNotNull { it.toBooking() }
+    }
+
     private companion object {
         const val TIMESLOTS = "timeslots"
         const val BOOKINGS = "bookings"
@@ -112,6 +128,28 @@ internal fun DocumentSnapshot.toTimeslot(): Timeslot? {
         capacity = getLong("capacity")?.toInt() ?: 0,
         bookedCount = getLong("bookedCount")?.toInt() ?: 0,
         status = TimeslotStatus.fromValue(getString("status"))
+    )
+}
+
+/** Maps a bookings document to the domain model, or null if it is missing or malformed. */
+internal fun DocumentSnapshot.toBooking(): Booking? {
+    if (!exists()) return null
+    val slotDate = getTimestamp("slotDate") ?: return null
+    return Booking(
+        id = id,
+        bookingReference = getString("bookingReference").orEmpty(),
+        supporterId = getString("supporterId").orEmpty(),
+        supporterName = getString("supporterName").orEmpty(),
+        timeslotId = getString("timeslotId").orEmpty(),
+        slotDateMillis = slotDate.toDate().time,
+        slotStart = getString("slotStart").orEmpty(),
+        numberOfGuests = getLong("numberOfGuests")?.toInt() ?: 0,
+        durationHours = getDouble("durationHours") ?: 1.0,
+        pricePerPerson = getLong("pricePerPerson")?.toInt() ?: 0,
+        totalDue = getLong("totalDue")?.toInt() ?: 0,
+        specialNotes = getString("specialNotes").orEmpty(),
+        status = BookingStatus.fromValue(getString("status")),
+        createdAtMillis = getTimestamp("createdAt")?.toDate()?.time ?: 0L
     )
 }
 
