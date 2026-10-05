@@ -61,7 +61,8 @@
             android:layout_weight="1"
             android:text="Upcoming"
             android:textColor="@color/darkColor"
-            app:strokeColor="@color/pink" />
+            app:strokeColor="@color/pink"
+            app:backgroundTint="@color/lightPink"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPast"

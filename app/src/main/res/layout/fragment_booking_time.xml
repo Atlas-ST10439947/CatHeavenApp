@@ -70,13 +70,13 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <!-- FIX: Added app:singleLine="false" and vertical padding -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn1Hour"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="@color/lightPink"
                 android:paddingVertical="8dp"
                 android:text="1 Hr\nR30pp"
                 android:textColor="@color/darkColor"
@@ -142,7 +142,8 @@
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="10:00 AM"
-                android:textColor="@color/darkColor" />
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime11"
@@ -153,7 +154,8 @@
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="11:00 AM"
-                android:textColor="@color/darkColor" />
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime12"
@@ -164,7 +166,8 @@
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="12:00 PM"
-                android:textColor="@color/darkColor" />
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime1"
@@ -175,7 +178,8 @@
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="1:00 PM"
-                android:textColor="@color/darkColor" />
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime2"
@@ -186,7 +190,8 @@
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="2:00 PM"
-                android:textColor="@color/darkColor" />
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTime3"
@@ -197,7 +202,8 @@
                 android:layout_margin="4dp"
                 android:checkable="true"
                 android:text="3:00 PM"
-                android:textColor="@color/darkColor" />
+                android:textColor="@color/darkColor"
+                app:backgroundTint="@color/lightPink"/>
         </GridLayout>
 
         <com.google.android.material.button.MaterialButton
