@@ -85,8 +85,50 @@ await assertSucceeds(
 );
 console.log("PASS: user can register as a supporter");
 
+  await profileTests();
+
   await testEnv.cleanup();
   console.log("All tests passed.");
+}
+
+// ---- Profile editing (Settings > Profile / Notifications) ----
+async function profileTests() {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await context.firestore().collection("users").doc("supporter-1").set({
+      fullName: "Sam Supporter",
+      email: "sam@example.com",
+      phone: "0821234567",
+      role: "supporter",
+    });
+  });
+  const sam = testEnv.authenticatedContext("supporter-1", {}).firestore();
+  const samDoc = sam.collection("users").doc("supporter-1");
+
+  await assertSucceeds(samDoc.update({ fullName: "Sam S", phone: "+27 82 123 4567", location: "Somerset West" }));
+  console.log("PASS: supporter can update their name, phone and location");
+
+  await assertSucceeds(samDoc.update({ notificationPrefs: { email: false, inApp: true } }));
+  console.log("PASS: supporter can save notification preferences");
+
+  await assertFails(samDoc.update({ role: "admin" }));
+  console.log("PASS: supporter cannot promote themselves through a profile update");
+
+  await assertFails(samDoc.update({ email: "new@example.com" }));
+  console.log("PASS: supporter cannot change their sign-in email in Firestore");
+
+  await assertFails(samDoc.update({ phone: "call me maybe" }));
+  console.log("PASS: invalid phone number is rejected");
+
+  await assertFails(samDoc.update({ fullName: "" }));
+  console.log("PASS: empty name is rejected");
+
+  await assertFails(samDoc.update({ notificationPrefs: { email: "yes" } }));
+  await assertFails(samDoc.update({ notificationPrefs: { email: true, sms: true } }));
+  console.log("PASS: malformed notification preferences are rejected");
+
+  const otherUser = testEnv.authenticatedContext("someone-else", {}).firestore();
+  await assertFails(otherUser.collection("users").doc("supporter-1").update({ fullName: "Hijacked" }));
+  console.log("PASS: a user cannot edit someone else's profile");
 }
 
 runTests().catch((err) => {

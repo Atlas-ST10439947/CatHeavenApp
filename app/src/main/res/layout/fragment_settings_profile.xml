@@ -56,6 +56,7 @@
                 android:padding="24dp">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,33 +68,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        android:text="Jane Smith"
                         android:textColor="@color/darkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="Email Address"
+                    app:helperText="This is your sign-in email and cannot be changed here."
+                    app:helperTextEnabled="true"
                     app:boxStrokeColor="@color/pink"
                     app:hintTextColor="@color/pink">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:focusable="false"
                         android:inputType="textEmailAddress"
-                        android:text="jane@example.com"
                         android:textColor="@color/darkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phoneInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="Phone Number"
+                    android:hint="Phone Number (optional)"
                     app:boxStrokeColor="@color/pink"
                     app:hintTextColor="@color/pink">
                     <com.google.android.material.textfield.TextInputEditText
@@ -101,17 +106,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
-                        android:text="+27 123 456 7890"
+                        android:maxLength="20"
                         android:textColor="@color/darkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Location Merged Here -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/locationInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="Your Location"
+                    android:hint="Your Location (optional)"
                     app:boxStrokeColor="@color/pink"
                     app:hintTextColor="@color/pink">
                     <com.google.android.material.textfield.TextInputEditText
@@ -119,7 +125,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPostalAddress"
-                        android:text="Somerset West, WC"
                         android:textColor="@color/darkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 

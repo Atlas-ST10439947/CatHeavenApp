@@ -1,0 +1,122 @@
+package com.example.catheavenapp.ui.profile
+
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.catheavenapp.data.booking.NotSignedInException
+import com.example.catheavenapp.data.profile.FirestoreProfileRepository
+import com.example.catheavenapp.data.profile.ProfileRepository
+import com.example.catheavenapp.domain.profile.NotificationPrefs
+import com.example.catheavenapp.domain.profile.Profile
+import com.example.catheavenapp.domain.profile.ProfileCheck
+import com.example.catheavenapp.domain.profile.ProfileValidator
+import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
+
+sealed interface ProfileState {
+    object Loading : ProfileState
+    data class Loaded(val profile: Profile) : ProfileState
+    data class Failed(val message: String) : ProfileState
+}
+
+sealed interface ProfileSaveState {
+    object Idle : ProfileSaveState
+    object Saving : ProfileSaveState
+    data class Saved(val message: String) : ProfileSaveState
+    data class Failed(val message: String) : ProfileSaveState
+}
+
+/** Backs the Profile and Notifications settings screens. */
+class ProfileViewModel(
+    private val repository: ProfileRepository = FirestoreProfileRepository()
+) : ViewModel() {
+
+    private val _state = MutableLiveData<ProfileState>(ProfileState.Loading)
+    val state: LiveData<ProfileState> = _state
+
+    private val _saveState = MutableLiveData<ProfileSaveState>(ProfileSaveState.Idle)
+    val saveState: LiveData<ProfileSaveState> = _saveState
+
+    fun load() {
+        viewModelScope.launch {
+            _state.value = try {
+                ProfileState.Loaded(repository.myProfile())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: NotSignedInException) {
+                ProfileState.Failed("Please sign in again to edit your profile.")
+            } catch (e: Exception) {
+                Log.w(TAG, "Loading profile failed", e)
+                ProfileState.Failed("We couldn't load your profile. Check your connection and try again.")
+            }
+        }
+    }
+
+    /**
+     * Validates and saves the details. Returns the validation result so the
+     * screen can put an error on the right field; only saves when it is Valid.
+     */
+    fun saveDetails(fullName: String, phone: String, location: String): ProfileCheck {
+        val check = ProfileValidator.check(fullName, phone, location)
+        if (check !is ProfileCheck.Valid || _saveState.value == ProfileSaveState.Saving) return check
+
+        _saveState.value = ProfileSaveState.Saving
+        viewModelScope.launch {
+            _saveState.value = try {
+                repository.updateDetails(check.details)
+                updateLoaded {
+                    it.copy(
+                        fullName = check.details.fullName,
+                        phone = check.details.phone,
+                        location = check.details.location
+                    )
+                }
+                ProfileSaveState.Saved("Profile updated")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "Saving profile failed", e)
+                ProfileSaveState.Failed("We couldn't save your profile. Check your connection and try again.")
+            }
+        }
+        return check
+    }
+
+    fun saveNotifications(prefs: NotificationPrefs) {
+        val previous = (_state.value as? ProfileState.Loaded)?.profile?.notifications ?: return
+        if (prefs == previous) return
+
+        updateLoaded { it.copy(notifications = prefs) }   // show the change straight away
+        viewModelScope.launch {
+            try {
+                repository.updateNotifications(prefs)
+                _saveState.value = ProfileSaveState.Saved("Notification settings saved")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "Saving notification settings failed", e)
+                updateLoaded { it.copy(notifications = previous) }   // put the switches back
+                _saveState.value = ProfileSaveState.Failed(
+                    "We couldn't save your notification settings. Check your connection and try again."
+                )
+            }
+        }
+    }
+
+    fun onSaveMessageShown() {
+        if (_saveState.value is ProfileSaveState.Saved || _saveState.value is ProfileSaveState.Failed) {
+            _saveState.value = ProfileSaveState.Idle
+        }
+    }
+
+    private fun updateLoaded(change: (Profile) -> Profile) {
+        val loaded = _state.value as? ProfileState.Loaded ?: return
+        _state.value = ProfileState.Loaded(change(loaded.profile))
+    }
+
+    private companion object {
+        const val TAG = "Profile"
+    }
+}

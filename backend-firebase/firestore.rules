@@ -79,11 +79,47 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ---- Profile validation (mirrors ProfileValidator.kt in the app) ----
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function validName(name) {
+      return name is string && name.size() >= 1 && name.size() <= 80;
+    }
+
+    // Empty, or an optional leading + followed by 7-20 digits or spaces
+    function validPhone(phone) {
+      return phone is string && (phone == '' || phone.matches('[+]?[0-9 ]{7,20}'));
+    }
+
+    function validNotificationPrefs(prefs) {
+      return prefs is map
+        && prefs.keys().hasOnly(['email', 'inApp'])
+        && prefs.get('email', true) is bool
+        && prefs.get('inApp', true) is bool;
+    }
+
+    // Supporters may only change these fields, and each one that changes must be valid.
+    // role, email and dateJoined can never be edited from the app.
+    function validProfileChange() {
+      let data = request.resource.data;
+      return changedKeys().hasOnly(['fullName', 'phone', 'location', 'notificationPrefs'])
+        && (!('fullName' in changedKeys()) || validName(data.fullName))
+        && (!('phone' in changedKeys()) || validPhone(data.phone))
+        && (!('location' in changedKeys()) || (data.location is string && data.location.size() <= 100))
+        && (!('notificationPrefs' in changedKeys()) || validNotificationPrefs(data.notificationPrefs));
+    }
+
     // User accounts - only the account owner can read/update their own profile
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create: if isOwner(uid) && request.resource.data.role == 'supporter';
-      allow update: if isOwner(uid) && request.resource.data.role == resource.data.role;
+      allow create: if isOwner(uid)
+                    && request.resource.data.role == 'supporter'
+                    && request.resource.data.keys().hasOnly(['fullName', 'email', 'phone', 'role', 'dateJoined'])
+                    && validName(request.resource.data.fullName);
+      allow update: if isOwner(uid) && validProfileChange();
       allow delete: if isAdmin();
     }
 
