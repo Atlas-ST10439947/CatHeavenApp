@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 // Release signing comes from environment variables, so no key or password is ever
@@ -56,6 +57,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.crashlytics)   // crash and error reporting from supporters' phones
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.activity.ktx)

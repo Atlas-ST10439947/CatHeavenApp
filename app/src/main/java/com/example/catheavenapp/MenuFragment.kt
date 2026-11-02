@@ -1,7 +1,7 @@
 package com.example.catheavenapp
 
+import com.example.catheavenapp.util.Diagnostics
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +52,7 @@ class MenuFragment : Fragment() {
                 throw e
             } catch (e: Exception) {
                 // Offline or unavailable: the default menu text stays on screen
-                Log.w("Menu", "Loading menu failed", e)
+                Diagnostics.warn("Menu", "Loading menu failed", e)
             }
         }
     }

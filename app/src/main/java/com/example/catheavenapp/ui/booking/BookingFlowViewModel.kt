@@ -1,6 +1,6 @@
 package com.example.catheavenapp.ui.booking
 
-import android.util.Log
+import com.example.catheavenapp.util.Diagnostics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -94,7 +94,7 @@ class BookingFlowViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Loading timeslots failed", e)
+                Diagnostics.warn(TAG, "Loading timeslots failed", e)
                 TimeslotsState.Failed
             }
         }
@@ -117,7 +117,7 @@ class BookingFlowViewModel(
                 SubmitState.Failed(e.message ?: "Please sign in to book a visit.")
             } catch (e: Exception) {
                 // e.g. no connection, or PERMISSION_DENIED if the security rules reject the write
-                Log.w(TAG, "Booking failed", e)
+                Diagnostics.warn(TAG, "Booking failed", e)
                 SubmitState.Failed("We couldn't save your booking. Check your connection and try again.")
             }
         }

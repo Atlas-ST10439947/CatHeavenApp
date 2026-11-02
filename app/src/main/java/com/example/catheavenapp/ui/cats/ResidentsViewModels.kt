@@ -1,6 +1,6 @@
 package com.example.catheavenapp.ui.cats
 
-import android.util.Log
+import com.example.catheavenapp.util.Diagnostics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,7 +32,7 @@ class ResidentsViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Loading cats failed", e)
+                Diagnostics.warn(TAG, "Loading cats failed", e)
                 ResidentsState.Failed("We couldn't load the residents. Check your connection.")
             }
         }
@@ -61,7 +61,7 @@ class ResidentDetailViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Loading cat failed", e)
+                Diagnostics.warn(TAG, "Loading cat failed", e)
                 ResidentDetailState.Failed("We couldn't load this cat. Check your connection.")
             }
         }

@@ -1,6 +1,6 @@
 package com.example.catheavenapp.ui.booking
 
-import android.util.Log
+import com.example.catheavenapp.util.Diagnostics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -42,7 +42,7 @@ class MyBookingsViewModel(
             } catch (e: NotSignedInException) {
                 MyBookingsState.Failed("Please sign in to see your bookings.")
             } catch (e: Exception) {
-                Log.w(TAG, "Loading bookings failed", e)
+                Diagnostics.warn(TAG, "Loading bookings failed", e)
                 MyBookingsState.Failed("We couldn't load your bookings. Check your connection and try again.")
             }
         }

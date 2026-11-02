@@ -81,3 +81,14 @@ something unsigned.
 - Admin accounts: `node setAdmin.js` sets the `admin` custom claim (run manually, needs the service account key).
 - Initial menu: `node seedMenu.js` copies the default café and gift shop items into `menuItems` once.
 - Cats, menu items, timeslots and prices are business data, managed by admins in the app.
+
+## Monitoring after release
+
+- **Crashlytics** (free on the Spark plan) reports every crash from supporters' phones,
+  grouped by cause, with the app version and device. Open Firebase Console > Crashlytics.
+  The first report appears after the app is opened once with Crashlytics enabled.
+- Handled errors that supporters see on screen (no connection, permission denied, a failed
+  save) are also sent as **non-fatal** issues through `util/Diagnostics.kt`, so a problem
+  that never crashes the app still shows up.
+- Each report carries the `versionName` from the release tag, so a spike can be traced to
+  the release that introduced it and rolled back as described above.

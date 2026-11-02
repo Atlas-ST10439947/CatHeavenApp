@@ -1,6 +1,6 @@
 package com.example.catheavenapp.ui.admin
 
-import android.util.Log
+import com.example.catheavenapp.util.Diagnostics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -59,7 +59,7 @@ class AdminBookingsViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Loading ledger failed", e)
+                Diagnostics.warn(TAG, "Loading ledger failed", e)
                 LedgerState.Failed("We couldn't load bookings. Check your connection and that this account is an admin.")
             }
         }
@@ -75,7 +75,7 @@ class AdminBookingsViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Cancelling booking failed", e)
+                Diagnostics.warn(TAG, "Cancelling booking failed", e)
                 LedgerActionState.Failed("We couldn't cancel that booking. Check your connection and try again.")
             }
             load()

@@ -1,6 +1,6 @@
 package com.example.catheavenapp.ui.profile
 
-import android.util.Log
+import com.example.catheavenapp.util.Diagnostics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,7 +48,7 @@ class ProfileViewModel(
             } catch (e: NotSignedInException) {
                 ProfileState.Failed("Please sign in again to edit your profile.")
             } catch (e: Exception) {
-                Log.w(TAG, "Loading profile failed", e)
+                Diagnostics.warn(TAG, "Loading profile failed", e)
                 ProfileState.Failed("We couldn't load your profile. Check your connection and try again.")
             }
         }
@@ -77,7 +77,7 @@ class ProfileViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Saving profile failed", e)
+                Diagnostics.warn(TAG, "Saving profile failed", e)
                 ProfileSaveState.Failed("We couldn't save your profile. Check your connection and try again.")
             }
         }
@@ -96,7 +96,7 @@ class ProfileViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w(TAG, "Saving notification settings failed", e)
+                Diagnostics.warn(TAG, "Saving notification settings failed", e)
                 updateLoaded { it.copy(notifications = previous) }   // put the switches back
                 _saveState.value = ProfileSaveState.Failed(
                     "We couldn't save your notification settings. Check your connection and try again."
