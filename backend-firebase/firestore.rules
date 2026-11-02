@@ -81,6 +81,91 @@ service cloud.firestore {
         && data.get('updatedAt', request.time) == request.time;
     }
 
+    // ---- Supporter cancel / reschedule (mirrors BookingChanges.kt in the app) ----
+
+    function bookingDoc(id) {
+      return /databases/$(database)/documents/bookings/$(id);
+    }
+
+    function slotDoc(id) {
+      return /databases/$(database)/documents/timeslots/$(id);
+    }
+
+    // A supporter can move or cancel their own confirmed booking until the day before the visit
+    function ownerCanChange(booking) {
+      return signedIn()
+        && booking.supporterId == request.auth.uid
+        && booking.status == 'confirmed'
+        && booking.slotDate > request.time;
+    }
+
+    // The supporter's booking stops using this slot in the same write, so its seats come back.
+    // FULL becomes OPEN; OPEN and CLOSED stay as they are.
+    function isSeatRelease(timeslotId) {
+      let before = resource.data;
+      let after = request.resource.data;
+      let bookingBefore = get(bookingDoc(after.lastBookingId)).data;
+      let bookingAfter = getAfter(bookingDoc(after.lastBookingId)).data;
+      return after.diff(before).affectedKeys().hasOnly(['bookedCount', 'status', 'lastBookingId'])
+        && ownerCanChange(bookingBefore)
+        && bookingBefore.timeslotId == timeslotId
+        && (bookingAfter.status == 'cancelled' || bookingAfter.timeslotId != timeslotId)
+        && after.bookedCount == before.bookedCount - bookingBefore.numberOfGuests
+        && after.bookedCount >= 0
+        && after.status == (before.status == 'full' ? 'open' : before.status);
+    }
+
+    // The supporter's existing booking moves onto this slot in the same write
+    function isRescheduleIncrement(timeslotId) {
+      let before = resource.data;
+      let after = request.resource.data;
+      let bookingBefore = get(bookingDoc(after.lastBookingId)).data;
+      let bookingAfter = getAfter(bookingDoc(after.lastBookingId)).data;
+      let newCount = before.bookedCount + bookingBefore.numberOfGuests;
+      return after.diff(before).affectedKeys().hasOnly(['bookedCount', 'status', 'lastBookingId'])
+        && ownerCanChange(bookingBefore)
+        && bookingBefore.timeslotId != timeslotId
+        && bookingAfter.timeslotId == timeslotId
+        && bookingAfter.status == 'confirmed'
+        && before.status == 'open'
+        && after.bookedCount == newCount
+        && newCount <= before.capacity
+        && after.status == (newCount >= before.capacity ? 'full' : 'open');
+    }
+
+    function slotCountChange(slotId) {
+      return getAfter(slotDoc(slotId)).data.bookedCount - get(slotDoc(slotId)).data.bookedCount;
+    }
+
+    // Cancel: only the status fields change, and the slot gives the seats back in the same write
+    function isOwnerCancel() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return ownerCanChange(resource.data)
+        && changed.hasOnly(['status', 'cancelledAt', 'cancelledBy'])
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.cancelledBy == 'supporter'
+        && request.resource.data.cancelledAt == request.time
+        && slotCountChange(resource.data.timeslotId) == -resource.data.numberOfGuests;
+    }
+
+    // Reschedule: only the slot fields change, to a future slot whose details match,
+    // with the seats moved from the old slot to the new one in the same write
+    function isOwnerReschedule() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let next = request.resource.data;
+      let newSlot = getAfter(slotDoc(next.timeslotId)).data;
+      return ownerCanChange(resource.data)
+        && changed.hasOnly(['timeslotId', 'slotDate', 'slotStart', 'rescheduledAt'])
+        && next.timeslotId != resource.data.timeslotId
+        && next.rescheduledAt == request.time
+        && next.slotDate == newSlot.date
+        && next.slotStart == newSlot.startTime
+        && next.slotDate > request.time
+        && slotCountChange(next.timeslotId) == resource.data.numberOfGuests
+        && (!exists(slotDoc(resource.data.timeslotId))
+            || slotCountChange(resource.data.timeslotId) == -resource.data.numberOfGuests);
+    }
+
     // Public catalogue - anyone can read, only admins can write, and writes must be valid
     match /cats/{catId} {
       allow read: if true;
@@ -96,7 +181,10 @@ service cloud.firestore {
     match /timeslots/{timeslotId} {
       allow read: if true;
       allow create, delete: if isAdmin();
-      allow update: if isAdmin() || isBookingIncrement(timeslotId);
+      allow update: if isAdmin()
+                    || isBookingIncrement(timeslotId)
+                    || isRescheduleIncrement(timeslotId)
+                    || isSeatRelease(timeslotId);
     }
 
     match /pricingTiers/{tierId} {
@@ -181,7 +269,9 @@ service cloud.firestore {
                     && getAfter(/databases/$(database)/documents/timeslots/$(request.resource.data.timeslotId))
                          .data.lastBookingId == bookingId;
 
-      allow update, delete: if isAdmin();
+      // Admins can change anything; supporters can only cancel or reschedule their own
+      allow update: if isAdmin() || isOwnerCancel() || isOwnerReschedule();
+      allow delete: if isAdmin();
     }
 
     // Paw Parent enrolments

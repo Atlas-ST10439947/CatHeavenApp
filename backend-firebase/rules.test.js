@@ -88,6 +88,7 @@ console.log("PASS: user can register as a supporter");
   await profileTests();
   await contentTests();
   await ledgerTests();
+  await supporterChangeTests();
 
   await testEnv.cleanup();
   console.log("All tests passed.");
@@ -230,6 +231,103 @@ async function ledgerTests() {
   batch.update(admin.collection("timeslots").doc("slot-ledger"), { bookedCount: 8, status: "open" });
   await assertSucceeds(batch.commit());
   console.log("PASS: admin can cancel a booking and release its seats together");
+}
+
+// ---- Supporter cancel / reschedule ----
+async function supporterChangeTests() {
+  const firebase = require("firebase/compat/app");
+  require("firebase/compat/firestore");
+  const { Timestamp, FieldValue } = firebase.firestore;
+  const dayMs = 24 * 3600 * 1000;
+  const inDays = (n) => Timestamp.fromDate(new Date(Date.now() + n * dayMs));
+  const nextWeek = inDays(7);
+  const nextFortnight = inDays(14);
+  const earlierToday = inDays(-0.1);
+
+  async function seed() {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await db.collection("timeslots").doc("slot-a").set({
+        date: nextWeek, startTime: "10:00", capacity: 4, bookedCount: 4, status: "full", lastBookingId: "b-sam",
+      });
+      await db.collection("timeslots").doc("slot-b").set({
+        date: nextFortnight, startTime: "14:00", capacity: 4, bookedCount: 1, status: "open", lastBookingId: "x",
+      });
+      await db.collection("timeslots").doc("slot-past").set({
+        date: earlierToday, startTime: "16:00", capacity: 4, bookedCount: 0, status: "open", lastBookingId: "x",
+      });
+      await db.collection("bookings").doc("b-sam").set({
+        supporterId: "supporter-1", timeslotId: "slot-a", slotDate: nextWeek, slotStart: "10:00",
+        numberOfGuests: 2, status: "confirmed",
+      });
+    });
+  }
+  const sam = testEnv.authenticatedContext("supporter-1", {}).firestore();
+  const eve = testEnv.authenticatedContext("someone-else", {}).firestore();
+  const booking = (db) => db.collection("bookings").doc("b-sam");
+  const slot = (db, id) => db.collection("timeslots").doc(id);
+
+  function reschedule(db, toSlot, toDate, toStart, newCount, newStatus) {
+    const batch = db.batch();
+    batch.update(booking(db), {
+      timeslotId: toSlot, slotDate: toDate, slotStart: toStart, rescheduledAt: FieldValue.serverTimestamp(),
+    });
+    batch.update(slot(db, "slot-a"), { bookedCount: 2, status: "open", lastBookingId: "b-sam" });
+    batch.update(slot(db, toSlot), { bookedCount: newCount, status: newStatus, lastBookingId: "b-sam" });
+    return batch.commit();
+  }
+
+  function cancel(db, released) {
+    const batch = db.batch();
+    batch.update(booking(db), { status: "cancelled", cancelledBy: "supporter", cancelledAt: FieldValue.serverTimestamp() });
+    batch.update(slot(db, "slot-a"), { bookedCount: released, status: "open", lastBookingId: "b-sam" });
+    return batch.commit();
+  }
+
+  await seed();
+  await assertSucceeds(reschedule(sam, "slot-b", nextFortnight, "14:00", 3, "open"));
+  console.log("PASS: supporter can move their booking to another open slot");
+
+  await seed();
+  await assertFails(reschedule(eve, "slot-b", nextFortnight, "14:00", 3, "open"));
+  console.log("PASS: nobody else can move a supporter's booking");
+
+  await seed();
+  await assertFails(reschedule(sam, "slot-b", nextFortnight, "14:00", 1, "open"));
+  console.log("PASS: reschedule must take the seats on the new slot");
+
+  await seed();
+  await assertFails(reschedule(sam, "slot-b", nextWeek, "14:00", 3, "open"));
+  console.log("PASS: booking date must match the new slot");
+
+  await seed();
+  await assertFails(reschedule(sam, "slot-past", earlierToday, "16:00", 2, "open"));
+  console.log("PASS: cannot move a booking onto a slot in the past");
+
+  await seed();
+  await assertSucceeds(cancel(sam, 2));
+  console.log("PASS: supporter can cancel their booking and release its seats");
+
+  await seed();
+  await assertFails(cancel(sam, 0));
+  console.log("PASS: cancelling cannot release more seats than the booking held");
+
+  await seed();
+  await assertFails(booking(sam).update({
+    status: "cancelled", cancelledBy: "supporter", cancelledAt: FieldValue.serverTimestamp(),
+  }));
+  console.log("PASS: cancelling must release the seats in the same write");
+
+  await seed();
+  await assertFails(booking(sam).update({ numberOfGuests: 8 }));
+  console.log("PASS: supporter cannot change guests or price on an existing booking");
+
+  await seed();
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await context.firestore().collection("bookings").doc("b-sam").update({ slotDate: earlierToday });
+  });
+  await assertFails(cancel(sam, 2));
+  console.log("PASS: bookings can't be changed on the day of the visit");
 }
 
 runTests().catch((err) => {
