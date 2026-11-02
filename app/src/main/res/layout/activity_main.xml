@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/surface">
 
     <include
         android:id="@+id/mainTopBar"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_nav_bg"
         app:elevation="16dp"
-        app:itemIconTint="@color/black"
+        app:itemIconTint="@color/darkColor"
         android:theme="@style/PinkBottomNav"
         app:itemRippleColor="@color/pink"
         app:labelVisibilityMode="unlabeled"

@@ -1,7 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Dark theme. The dark palette is in values-night/colors.xml (dark brown surfaces,
+         light text, Cat Heaven pink accents) and Theme.CatHeavenApp in values/themes.xml
+         maps it onto Material 3. Status and navigation bar icons follow the theme
+         automatically through enableEdgeToEdge() in each activity. -->
     <style name="Base.Theme.CatHeavenApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- We provide a real dark theme, so Android must not auto-darken the app on top of it -->
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
     </style>
 </resources>
