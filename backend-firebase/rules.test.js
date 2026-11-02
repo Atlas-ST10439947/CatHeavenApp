@@ -87,6 +87,7 @@ console.log("PASS: user can register as a supporter");
 
   await profileTests();
   await contentTests();
+  await ledgerTests();
 
   await testEnv.cleanup();
   console.log("All tests passed.");
@@ -199,6 +200,36 @@ async function contentTests() {
   await assertFails(admin.collection("menuItems").doc("bad").set({ ...goodItem, category: "weapons" }));
   await assertFails(admin.collection("menuItems").doc("bad").set({ ...goodItem, secretNote: "x" }));
   console.log("PASS: invalid menu items are rejected");
+}
+
+// ---- Admin Booking Ledger ----
+async function ledgerTests() {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await db.collection("timeslots").doc("slot-ledger").set({
+      startTime: "10:00", capacity: 10, bookedCount: 10, status: "full", lastBookingId: "booking-ledger",
+    });
+    await db.collection("bookings").doc("booking-ledger").set({
+      supporterId: "supporter-1", timeslotId: "slot-ledger", numberOfGuests: 2, status: "confirmed",
+    });
+  });
+  const admin = testEnv.authenticatedContext("admin-uid", { admin: true }).firestore();
+  const sam = testEnv.authenticatedContext("supporter-1", {}).firestore();
+
+  await assertSucceeds(admin.collection("bookings").where("timeslotId", "==", "slot-ledger").get());
+  console.log("PASS: admin can list every supporter's bookings for the ledger");
+
+  await assertFails(sam.collection("bookings").where("timeslotId", "==", "slot-ledger").get());
+  console.log("PASS: supporter cannot list bookings without filtering to their own");
+
+  await assertFails(sam.collection("timeslots").doc("slot-ledger").update({ bookedCount: 8, status: "open" }));
+  console.log("PASS: supporter cannot release seats on a timeslot");
+
+  const batch = admin.batch();
+  batch.update(admin.collection("bookings").doc("booking-ledger"), { status: "cancelled", cancelledBy: "admin" });
+  batch.update(admin.collection("timeslots").doc("slot-ledger"), { bookedCount: 8, status: "open" });
+  await assertSucceeds(batch.commit());
+  console.log("PASS: admin can cancel a booking and release its seats together");
 }
 
 runTests().catch((err) => {

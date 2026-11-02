@@ -35,7 +35,8 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
-        android:text="Filter by Date: Today"
+        android:contentDescription="Choose the day to show"
+        android:text="Showing: Today"
         android:textColor="@color/darkColor"
         app:cornerRadius="12dp"
         app:icon="@android:drawable/ic_menu_today"
@@ -44,6 +45,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adminBookingsHeader"
         app:strokeColor="@color/pink" />
+
+    <!-- e.g. "3 bookings · 7 guests · R840 expected" -->
+    <TextView
+        android:id="@+id/ledgerSummaryText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:accessibilityLiveRegion="polite"
+        android:textColor="@color/darkColor"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnFilterDate"
+        tools:text="3 bookings  ·  7 guests  ·  R840 expected" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/adminBookingsRecyclerView"
@@ -57,7 +74,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFilterDate"
+        app:layout_constraintTop_toBottomOf="@+id/ledgerSummaryText"
         tools:listitem="@layout/fragment_upcoming_booking" />
+
+    <!-- Shown while loading, on errors, and on days with no bookings -->
+    <TextView
+        android:id="@+id/emptyStateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="48dp"
+        android:accessibilityLiveRegion="polite"
+        android:gravity="center"
+        android:textColor="@color/textColor"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ledgerSummaryText"
+        tools:text="No bookings on this day."
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
