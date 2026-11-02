@@ -3,4 +3,9 @@
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <!-- Screens fill the width on phones. On tablets and in landscape the content is
+         capped and centred (values-sw600dp, values-sw840dp, values-land) so forms and
+         cards don't stretch across a wide screen. -->
+    <dimen name="content_max_width">4000dp</dimen>
 </resources>

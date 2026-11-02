@@ -12,6 +12,7 @@
         android:padding="24dp">
 
         <TextView
+            android:accessibilityHeading="true"
             android:id="@+id/createAccountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

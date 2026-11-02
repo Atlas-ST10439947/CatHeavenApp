@@ -26,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+            android:accessibilityHeading="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Staff Dashboard"
@@ -75,6 +76,7 @@
                     android:padding="24dp">
 
                     <ImageView
+                        android:importantForAccessibility="no"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/booking"
@@ -114,6 +116,7 @@
                     android:padding="24dp">
 
                     <ImageView
+                        android:importantForAccessibility="no"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/menu"
@@ -153,6 +156,7 @@
                     android:padding="24dp">
 
                     <ImageView
+                        android:importantForAccessibility="no"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/user"
@@ -192,6 +196,7 @@
                     android:padding="24dp">
 
                     <ImageView
+                        android:importantForAccessibility="no"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/cats"

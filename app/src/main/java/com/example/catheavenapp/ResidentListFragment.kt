@@ -31,8 +31,9 @@ class ResidentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setup RecyclerView with 2 columns
-        binding.residentsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        // 2 columns on phones, more in landscape and on tablets (res/values*/integers.xml)
+        val columns = resources.getInteger(R.integer.resident_columns)
+        binding.residentsRecyclerView.layoutManager = GridLayoutManager(requireContext(), columns)
 
         // Tapping a cat opens its profile, passing the cat's ID
         val adapter = ResidentAdapter(emptyList()) { selectedCat ->

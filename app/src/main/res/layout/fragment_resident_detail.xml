@@ -24,6 +24,7 @@
             android:paddingVertical="32dp">
 
             <TextView
+            android:accessibilityHeading="true"
                 android:id="@+id/catNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
