@@ -1,6 +1,7 @@
 package com.example.catheavenapp.ui.profile
 
 import com.example.catheavenapp.util.Diagnostics
+import com.example.catheavenapp.util.FailureMessages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -78,7 +79,7 @@ class ProfileViewModel(
                 throw e
             } catch (e: Exception) {
                 Diagnostics.warn(TAG, "Saving profile failed", e)
-                ProfileSaveState.Failed("We couldn't save your profile. Check your connection and try again.")
+                ProfileSaveState.Failed(FailureMessages.forSupporter(e, "save your profile"))
             }
         }
         return check
@@ -99,7 +100,7 @@ class ProfileViewModel(
                 Diagnostics.warn(TAG, "Saving notification settings failed", e)
                 updateLoaded { it.copy(notifications = previous) }   // put the switches back
                 _saveState.value = ProfileSaveState.Failed(
-                    "We couldn't save your notification settings. Check your connection and try again."
+                    FailureMessages.forSupporter(e, "save your notification settings")
                 )
             }
         }

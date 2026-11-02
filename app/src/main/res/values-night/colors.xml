@@ -7,6 +7,7 @@
     <color name="surfaceElevated">#261A1F</color>
     <color name="lightGrey">#33262C</color>
     <color name="lightPink">#5A2B32</color>
+    <color name="switchTrackOff">#4E4046</color>
 
     <!-- Text on surfaces (light on dark) -->
     <color name="darkColor">#F5EDEF</color>

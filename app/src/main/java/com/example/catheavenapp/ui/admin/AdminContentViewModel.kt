@@ -1,6 +1,7 @@
 package com.example.catheavenapp.ui.admin
 
 import com.example.catheavenapp.util.Diagnostics
+import com.example.catheavenapp.util.FailureMessages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -121,7 +122,7 @@ class AdminContentViewModel(
             } catch (e: Exception) {
                 // PERMISSION_DENIED means the account isn't an admin, or the rules rejected the data
                 Diagnostics.warn(TAG, "Saving content failed", e)
-                ContentSaveState.Failed("We couldn't save that change. Check your connection and that this account is an admin.")
+                ContentSaveState.Failed(FailureMessages.forAdmin(e, "save that change"))
             }
             load()   // show what is actually stored now
         }

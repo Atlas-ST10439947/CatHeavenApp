@@ -1,6 +1,7 @@
 package com.example.catheavenapp.ui.admin
 
 import com.example.catheavenapp.util.Diagnostics
+import com.example.catheavenapp.util.FailureMessages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -80,9 +81,7 @@ class AdminScheduleViewModel(
                     } catch (e: Exception) {
                         // PERMISSION_DENIED here means this account isn't recognised as an admin
                         Diagnostics.warn(TAG, "Saving schedule failed", e)
-                        ScheduleSaveState.Failed(
-                            "We couldn't save the schedule. Check your connection and that this account is an admin."
-                        )
+                        ScheduleSaveState.Failed(FailureMessages.forAdmin(e, "save the schedule"))
                     }
                     loadDay(date)   // show what is actually saved now
                 }

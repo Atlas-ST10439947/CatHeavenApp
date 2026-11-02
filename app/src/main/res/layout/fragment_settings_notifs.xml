@@ -75,7 +75,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:thumbTint="@color/white"
-                    app:trackTint="@color/pink"
+                    app:trackTint="@color/switch_track"
                     android:checked="true" />
 
                 <View
@@ -95,7 +95,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:thumbTint="@color/white"
-                    app:trackTint="@color/pink"
+                    app:trackTint="@color/switch_track"
                     android:checked="true" />
 
             </LinearLayout>

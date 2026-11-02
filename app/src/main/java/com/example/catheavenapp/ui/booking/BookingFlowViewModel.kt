@@ -1,6 +1,7 @@
 package com.example.catheavenapp.ui.booking
 
 import com.example.catheavenapp.util.Diagnostics
+import com.example.catheavenapp.util.FailureMessages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -118,7 +119,7 @@ class BookingFlowViewModel(
             } catch (e: Exception) {
                 // e.g. no connection, or PERMISSION_DENIED if the security rules reject the write
                 Diagnostics.warn(TAG, "Booking failed", e)
-                SubmitState.Failed("We couldn't save your booking. Check your connection and try again.")
+                SubmitState.Failed(FailureMessages.forSupporter(e, "save your booking"))
             }
         }
     }

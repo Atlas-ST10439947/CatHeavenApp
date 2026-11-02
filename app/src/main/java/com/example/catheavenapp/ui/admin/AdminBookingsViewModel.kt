@@ -1,6 +1,7 @@
 package com.example.catheavenapp.ui.admin
 
 import com.example.catheavenapp.util.Diagnostics
+import com.example.catheavenapp.util.FailureMessages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -76,7 +77,7 @@ class AdminBookingsViewModel(
                 throw e
             } catch (e: Exception) {
                 Diagnostics.warn(TAG, "Cancelling booking failed", e)
-                LedgerActionState.Failed("We couldn't cancel that booking. Check your connection and try again.")
+                LedgerActionState.Failed(FailureMessages.forAdmin(e, "cancel that booking"))
             }
             load()
         }

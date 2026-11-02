@@ -1,6 +1,7 @@
 package com.example.catheavenapp.ui.booking
 
 import com.example.catheavenapp.util.Diagnostics
+import com.example.catheavenapp.util.FailureMessages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -69,12 +70,15 @@ class MyBookingsViewModel(
             it.id != booking.timeslotId && it.isBookable && it.remainingCapacity >= booking.numberOfGuests
         }
 
-    fun cancel(booking: Booking) = act("Your ${formatDateMillis(booking.slotDateMillis)} visit has been cancelled") {
+    fun cancel(booking: Booking) = act(
+        "Your ${formatDateMillis(booking.slotDateMillis)} visit has been cancelled", "cancel your booking"
+    ) {
         repository.cancelMyBooking(booking.id)
     }
 
     fun reschedule(booking: Booking, newSlot: Timeslot) = act(
-        "Moved to ${formatDateMillis(newSlot.dateMillis)} at ${formatSlotTime(newSlot.startTime)}"
+        "Moved to ${formatDateMillis(newSlot.dateMillis)} at ${formatSlotTime(newSlot.startTime)}",
+        "move your booking"
     ) {
         repository.rescheduleMyBooking(booking.id, newSlot.id)
     }
@@ -85,7 +89,7 @@ class MyBookingsViewModel(
         }
     }
 
-    private fun act(successMessage: String, action: suspend () -> Unit) {
+    private fun act(successMessage: String, what: String, action: suspend () -> Unit) {
         if (_actionState.value == BookingActionState.Working) return
         _actionState.value = BookingActionState.Working
         viewModelScope.launch {
@@ -98,7 +102,7 @@ class MyBookingsViewModel(
                 BookingActionState.Failed(e.rejection.message)
             } catch (e: Exception) {
                 Diagnostics.warn(TAG, "Changing booking failed", e)
-                BookingActionState.Failed("We couldn't update your booking. Check your connection and try again.")
+                BookingActionState.Failed(FailureMessages.forSupporter(e, what))
             }
             load()
         }
