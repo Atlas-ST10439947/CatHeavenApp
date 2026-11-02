@@ -42,10 +42,50 @@ service cloud.firestore {
         && after.status == (newCount >= before.capacity ? 'full' : 'open');
     }
 
-    // Public catalogue - anyone can read, only admins can write
+    // ---- Admin-written content validation (mirrors ContentValidator.kt in the app) ----
+
+    function optionalText(data, key, max) {
+      return !(key in data) || (data[key] is string && data[key].size() <= max);
+    }
+
+    // A date that is either not set (missing/null) or not in the future
+    function optionalPastDate(data, key) {
+      return data.get(key, null) == null
+        || (data[key] is timestamp && data[key] <= request.time);
+    }
+
+    function validCat(data) {
+      return data.name is string && data.name.size() >= 1 && data.name.size() <= 40
+        && optionalText(data, 'breed', 40)
+        && optionalText(data, 'gender', 20)
+        && optionalText(data, 'personality', 60)
+        && optionalText(data, 'biography', 1000)
+        && data.get('adoptionStatus', 'resident') in ['available', 'pendingAdoption', 'adopted', 'resident']
+        // photoUrl names a photo bundled with the app, e.g. "amore"
+        && data.get('photoUrl', '') is string
+        && data.get('photoUrl', '').matches('[a-z0-9_]{0,60}')
+        && optionalPastDate(data, 'dateOfBirth')
+        && optionalPastDate(data, 'dateArrived')
+        && (data.get('dateOfBirth', null) == null || data.get('dateArrived', null) == null
+            || data.dateArrived >= data.dateOfBirth)
+        && data.get('updatedAt', request.time) == request.time;
+    }
+
+    function validMenuItem(data) {
+      return data.keys().hasOnly(['name', 'category', 'price', 'isAvailable', 'updatedAt'])
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 60
+        && data.category in ['foodAndDrink', 'giftShop']
+        && (data.get('price', null) == null
+            || (data.price is int && data.price >= 0 && data.price <= 5000))
+        && data.get('isAvailable', true) is bool
+        && data.get('updatedAt', request.time) == request.time;
+    }
+
+    // Public catalogue - anyone can read, only admins can write, and writes must be valid
     match /cats/{catId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, update: if isAdmin() && validCat(request.resource.data);
+      allow delete: if isAdmin();
 
       match /updates/{updateId} {
         allow read: if true;
@@ -76,7 +116,8 @@ service cloud.firestore {
 
     match /menuItems/{menuItemId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, update: if isAdmin() && validMenuItem(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     // ---- Profile validation (mirrors ProfileValidator.kt in the app) ----

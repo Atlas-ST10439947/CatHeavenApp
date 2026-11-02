@@ -86,6 +86,7 @@ await assertSucceeds(
 console.log("PASS: user can register as a supporter");
 
   await profileTests();
+  await contentTests();
 
   await testEnv.cleanup();
   console.log("All tests passed.");
@@ -129,6 +130,75 @@ async function profileTests() {
   const otherUser = testEnv.authenticatedContext("someone-else", {}).firestore();
   await assertFails(otherUser.collection("users").doc("supporter-1").update({ fullName: "Hijacked" }));
   console.log("PASS: a user cannot edit someone else's profile");
+}
+
+// ---- Admin content (cats and menu items) ----
+async function contentTests() {
+  // context.firestore() is the compat (v8-style) API, so use compat field values too
+  const firebase = require("firebase/compat/app");
+  require("firebase/compat/firestore");
+  const { Timestamp } = firebase.firestore;
+  const serverTimestamp = () => firebase.firestore.FieldValue.serverTimestamp();
+  const admin = testEnv.authenticatedContext("admin-uid", { admin: true }).firestore();
+  const supporter = testEnv.authenticatedContext("supporter-1", {}).firestore();
+
+  const goodCat = {
+    name: "Amore",
+    breed: "Tabby",
+    gender: "female",
+    personality: "cuddly",
+    biography: "Loves sunny windowsills.",
+    adoptionStatus: "resident",
+    photoUrl: "amore",
+    dateOfBirth: Timestamp.fromDate(new Date("2022-03-01")),
+    dateArrived: Timestamp.fromDate(new Date("2023-01-15")),
+    updatedAt: serverTimestamp(),
+  };
+
+  await assertSucceeds(admin.collection("cats").doc("cat-amore").set(goodCat));
+  console.log("PASS: admin can add a valid cat");
+
+  await assertFails(supporter.collection("cats").doc("cat-sneaky").set(goodCat));
+  console.log("PASS: supporter cannot add a cat");
+
+  await assertFails(admin.collection("cats").doc("cat-bad").set({ ...goodCat, name: "" }));
+  console.log("PASS: cat without a name is rejected");
+
+  await assertFails(admin.collection("cats").doc("cat-bad").set({ ...goodCat, adoptionStatus: "sold" }));
+  console.log("PASS: unknown adoption status is rejected");
+
+  await assertFails(admin.collection("cats").doc("cat-bad").set({ ...goodCat, photoUrl: "https://evil.example/x.png" }));
+  console.log("PASS: photo must be one of the bundled photo names");
+
+  await assertFails(admin.collection("cats").doc("cat-bad").set({
+    ...goodCat, dateOfBirth: Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 3600 * 1000)),
+  }));
+  console.log("PASS: future date of birth is rejected");
+
+  await assertFails(admin.collection("cats").doc("cat-bad").set({
+    ...goodCat, dateArrived: Timestamp.fromDate(new Date("2021-01-01")),
+  }));
+  console.log("PASS: arrival before birth is rejected");
+
+  await assertSucceeds(admin.collection("cats").doc("cat-amore").delete());
+  console.log("PASS: admin can delete a cat");
+
+  const goodItem = { name: "Cappuccino", category: "foodAndDrink", price: 35, isAvailable: true, updatedAt: serverTimestamp() };
+
+  await assertSucceeds(admin.collection("menuItems").doc("cappuccino").set(goodItem));
+  await assertSucceeds(admin.collection("menuItems").doc("books").set({ ...goodItem, name: "Books", category: "giftShop", price: null }));
+  console.log("PASS: admin can add menu items, with or without a price");
+
+  await assertSucceeds(testEnv.unauthenticatedContext().firestore().collection("menuItems").doc("cappuccino").get());
+  console.log("PASS: anyone can read the menu");
+
+  await assertFails(supporter.collection("menuItems").doc("free-coffee").set({ ...goodItem, price: 0 }));
+  console.log("PASS: supporter cannot change the menu");
+
+  await assertFails(admin.collection("menuItems").doc("bad").set({ ...goodItem, price: -5 }));
+  await assertFails(admin.collection("menuItems").doc("bad").set({ ...goodItem, category: "weapons" }));
+  await assertFails(admin.collection("menuItems").doc("bad").set({ ...goodItem, secretNote: "x" }));
+  console.log("PASS: invalid menu items are rejected");
 }
 
 runTests().catch((err) => {
