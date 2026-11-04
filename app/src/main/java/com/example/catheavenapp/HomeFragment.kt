@@ -31,6 +31,11 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_home_to_bookingDateFragment)
         }
 
+        // The Rescue Cats card opens the Meet the Residents tab
+        binding.rescueCatsCard.setOnClickListener {
+            (activity as? MainActivity)?.openTab(R.id.nav_cats)
+        }
+
         // Launch external browser for GivenGain donations
         binding.donateButton.setOnClickListener {
             val url = "https://www.givengain.com/cause/rescue-cat-cafe-21339"
