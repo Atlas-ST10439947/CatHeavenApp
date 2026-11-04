@@ -91,6 +91,8 @@ class AdminContentFragment : Fragment() {
             }
         }
 
+        binding.btnAddGiftShopDefaults.setOnClickListener { viewModel.addDefaultGiftShop() }
+
         binding.fabAddContent.setOnClickListener {
             when (viewModel.tab.value) {
                 ContentTab.MENU -> showMenuEditor(null)
@@ -103,10 +105,20 @@ class AdminContentFragment : Fragment() {
 
     private fun render(state: ContentListState) {
         when (state) {
-            ContentListState.Loading -> showMessage("Loading…")
-            is ContentListState.Failed -> showMessage(state.message)
+            ContentListState.Loading -> {
+                binding.btnAddGiftShopDefaults.visibility = View.GONE
+                showMessage("Loading…")
+            }
+            is ContentListState.Failed -> {
+                binding.btnAddGiftShopDefaults.visibility = View.GONE
+                showMessage(state.message)
+            }
             is ContentListState.Loaded -> {
                 adapter.updateData(state.rows)
+                // Offer the standard gift shop range until there is at least one gift shop item
+                val hasGiftShop = state.rows.any { it is ContentRow.MenuRow && it.item.category == MenuCategory.GIFT_SHOP }
+                binding.btnAddGiftShopDefaults.visibility =
+                    if (state.tab == ContentTab.MENU && !hasGiftShop) View.VISIBLE else View.GONE
                 if (state.rows.isEmpty()) {
                     showMessage(
                         if (state.tab == ContentTab.CATS) "No cats yet. Tap + to add one."

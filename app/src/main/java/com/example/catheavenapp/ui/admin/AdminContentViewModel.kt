@@ -12,6 +12,7 @@ import com.example.catheavenapp.data.menu.FirestoreMenuRepository
 import com.example.catheavenapp.data.menu.MenuRepository
 import com.example.catheavenapp.domain.content.ContentCheck
 import com.example.catheavenapp.domain.content.ContentValidator
+import com.example.catheavenapp.domain.content.DefaultMenu
 import com.example.catheavenapp.domain.model.Cat
 import com.example.catheavenapp.domain.model.MenuItem
 import kotlinx.coroutines.Job
@@ -71,7 +72,10 @@ class AdminContentViewModel(
             _list.value = try {
                 val rows = when (tab) {
                     ContentTab.CATS -> cats.allCats().map { ContentRow.CatRow(it) }
-                    ContentTab.MENU -> menu.allItems().map { ContentRow.MenuRow(it) }
+                    // Grouped by section (Beverages & Food, then Gift Shop), then by name
+                    ContentTab.MENU -> menu.allItems()
+                        .sortedWith(compareBy({ it.category.ordinal }, { it.name.lowercase() }))
+                        .map { ContentRow.MenuRow(it) }
                 }
                 ContentListState.Loaded(tab, rows)
             } catch (e: CancellationException) {
@@ -101,6 +105,11 @@ class AdminContentViewModel(
     }
 
     fun deleteCat(cat: Cat) = write("${cat.name} removed") { cats.delete(cat.id) }
+
+    /** Adds the standard gift shop range. Fixed IDs mean tapping twice can't create duplicates. */
+    fun addDefaultGiftShop() = write("Added the standard gift shop items") {
+        DefaultMenu.giftShopItems().forEach { menu.save(it) }
+    }
 
     fun deleteMenuItem(item: MenuItem) = write("${item.name} removed") { menu.delete(item.id) }
 
