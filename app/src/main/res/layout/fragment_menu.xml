@@ -82,9 +82,55 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="140dp"
                     android:layout_height="140dp"
+                    android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
                     android:contentDescription="A toasted sandwich"
                     android:src="@drawable/toastie"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+                <!-- Gift shop photos (from the client's Cat Haven Resources folder) -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="16dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Two grey and white cat figurines from the gift shop"
+                    android:src="@drawable/gift_shop_01"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="16dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="A hand-painted sleeping cat ornament"
+                    android:src="@drawable/gift_shop_02"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="16dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Gift shop shelves with cat toys, stationery and T-shirts"
+                    android:src="@drawable/gift_shop_03"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="16dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Gift shop jewellery stands and a wall of cat-themed bags"
+                    android:src="@drawable/gift_shop_04"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Gift shop display of cat mugs, ornaments and gifts"
+                    android:src="@drawable/gift_shop_05"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
             </LinearLayout>
         </HorizontalScrollView>
