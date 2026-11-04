@@ -3,8 +3,11 @@ package com.example.catheavenapp.data.booking
 import com.example.catheavenapp.domain.booking.BookingDecision
 import com.example.catheavenapp.domain.booking.BookingDraft
 import com.example.catheavenapp.domain.booking.BookingPlanner
+import com.example.catheavenapp.domain.booking.BookingChanges
 import com.example.catheavenapp.domain.booking.BookingRejection
+import com.example.catheavenapp.domain.booking.ChangeRejection
 import com.example.catheavenapp.domain.booking.PriceQuote
+import com.example.catheavenapp.domain.booking.RescheduleDecision
 import com.example.catheavenapp.domain.booking.VisitDate
 import com.example.catheavenapp.domain.model.Booking
 import com.example.catheavenapp.domain.model.BookingStatus
@@ -29,9 +32,20 @@ interface BookingRepository {
 
     /** Every booking made by the signed-in supporter, in no particular order. */
     suspend fun myBookings(): List<Booking>
+
+    /** Cancels the supporter's own booking and releases its seats, in one transaction. */
+    suspend fun cancelMyBooking(bookingId: String)
+
+    /**
+     * Moves the supporter's own booking to [newSlotId], releasing the old seats and taking
+     * new ones in one transaction. Throws [BookingChangeException] if it isn't allowed.
+     */
+    suspend fun rescheduleMyBooking(bookingId: String, newSlotId: String): Booking
 }
 
 class BookingRejectedException(val rejection: BookingRejection) : Exception(rejection.message)
+
+class BookingChangeException(val rejection: ChangeRejection) : Exception(rejection.message)
 
 class NotSignedInException : Exception("Please sign in to book a visit.")
 
@@ -105,6 +119,85 @@ class FirestoreBookingRepository(
             .await()
         return snapshot.documents.mapNotNull { it.toBooking() }
     }
+
+    override suspend fun cancelMyBooking(bookingId: String) {
+        auth.currentUser ?: throw NotSignedInException()
+        val bookingRef = db.collection(BOOKINGS).document(bookingId)
+        try {
+            db.runTransaction { tx ->
+                // Reads first, then writes, as Firestore transactions require
+                val booking = tx.get(bookingRef).toBooking()
+                    ?: throw BookingChangeException(ChangeRejection.NotChangeable)
+                if (!BookingChanges.canChange(booking, VisitDate.today())) {
+                    throw BookingChangeException(ChangeRejection.NotChangeable)
+                }
+                val slotRef = db.collection(TIMESLOTS).document(booking.timeslotId)
+                val slot = tx.get(slotRef).toTimeslot()
+
+                tx.update(
+                    bookingRef, mapOf(
+                        "status" to BookingStatus.CANCELLED.value,
+                        "cancelledBy" to "supporter",
+                        "cancelledAt" to FieldValue.serverTimestamp()   // the rules check this equals request.time
+                    )
+                )
+                if (slot != null) {
+                    val released = slot.withCancellation(booking.numberOfGuests)
+                    tx.update(slotRef, slotCounts(released.bookedCount, released.status.value, bookingId))
+                }
+            }.await()
+        } catch (e: Exception) {
+            throw (e as? BookingChangeException) ?: (e.cause as? BookingChangeException) ?: e
+        }
+    }
+
+    override suspend fun rescheduleMyBooking(bookingId: String, newSlotId: String): Booking {
+        auth.currentUser ?: throw NotSignedInException()
+        val bookingRef = db.collection(BOOKINGS).document(bookingId)
+        val newSlotRef = db.collection(TIMESLOTS).document(newSlotId)
+        try {
+            return db.runTransaction { tx ->
+                val booking = tx.get(bookingRef).toBooking()
+                    ?: throw BookingChangeException(ChangeRejection.NotChangeable)
+                val oldSlotRef = db.collection(TIMESLOTS).document(booking.timeslotId)
+                val oldSlot = tx.get(oldSlotRef).toTimeslot()
+                val newSlotSnapshot = tx.get(newSlotRef)
+                val newSlot = newSlotSnapshot.toTimeslot()
+                    ?: throw BookingChangeException(ChangeRejection.SlotUnavailable)
+                // Copy the slot's own timestamp, so the rules' "slotDate == slot.date" check matches exactly
+                val newSlotDate = newSlotSnapshot.getTimestamp(FIELD_DATE)
+                    ?: throw BookingChangeException(ChangeRejection.SlotUnavailable)
+
+                when (val decision = BookingChanges.reschedule(booking, oldSlot, newSlot, VisitDate.today())) {
+                    is RescheduleDecision.Rejected -> throw BookingChangeException(decision.reason)
+                    is RescheduleDecision.Accepted -> {
+                        tx.update(
+                            bookingRef, mapOf(
+                                "timeslotId" to newSlot.id,
+                                "slotDate" to newSlotDate,
+                                "slotStart" to newSlot.startTime,
+                                "rescheduledAt" to FieldValue.serverTimestamp()
+                            )
+                        )
+                        decision.releasedSlot?.let {
+                            tx.update(oldSlotRef, slotCounts(it.bookedCount, it.status.value, bookingId))
+                        }
+                        tx.update(
+                            newSlotRef,
+                            slotCounts(decision.takenSlot.bookedCount, decision.takenSlot.status.value, bookingId)
+                        )
+                        decision.booking
+                    }
+                }
+            }.await()
+        } catch (e: Exception) {
+            throw (e as? BookingChangeException) ?: (e.cause as? BookingChangeException) ?: e
+        }
+    }
+
+    /** lastBookingId tells the security rules which booking this seat change belongs to. */
+    private fun slotCounts(bookedCount: Int, status: String, bookingId: String): Map<String, Any> =
+        mapOf("bookedCount" to bookedCount, "status" to status, "lastBookingId" to bookingId)
 
     private companion object {
         const val TIMESLOTS = "timeslots"

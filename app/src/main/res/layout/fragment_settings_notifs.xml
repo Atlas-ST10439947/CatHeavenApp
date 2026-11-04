@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface"
     android:fillViewport="true"
     tools:context=".SettingsNotifsFragment">
 
@@ -27,6 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+            android:accessibilityHeading="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Notifications"
@@ -50,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="32dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/surfaceElevated"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +75,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:thumbTint="@color/white"
-                    app:trackTint="@color/pink"
+                    app:trackTint="@color/switch_track"
                     android:checked="true" />
 
                 <View
@@ -94,7 +95,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:thumbTint="@color/white"
-                    app:trackTint="@color/pink"
+                    app:trackTint="@color/switch_track"
                     android:checked="true" />
 
             </LinearLayout>

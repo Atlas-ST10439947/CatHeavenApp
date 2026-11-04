@@ -4,8 +4,8 @@ package com.example.catheavenapp.domain.model
  * A bookable window of time on a given day. Mirrors a document in the
  * Firestore `timeslots` collection.
  *
- * bookedCount is only ever changed server-side, inside the booking
- * transaction, so the app treats it as read-only.
+ * bookedCount only changes inside the booking and cancellation transactions,
+ * which the security rules check, so the rest of the app treats it as read-only.
  */
 data class Timeslot(
     val id: String,
@@ -28,13 +28,25 @@ data class Timeslot(
     /**
      * Returns the slot as it should look after [guests] have been booked:
      * bookedCount goes up, and the status flips to FULL once capacity is reached.
-     * The booking Cloud Function applies exactly this rule inside its transaction.
+     * The booking transaction writes exactly this, and the security rules check it.
      */
     fun withBooking(guests: Int): Timeslot {
         require(guests > 0) { "guests must be positive" }
         require(guests <= remainingCapacity) { "not enough capacity for $guests guests" }
         val newCount = bookedCount + guests
         val newStatus = if (newCount >= capacity) TimeslotStatus.FULL else status
+        return copy(bookedCount = newCount, status = newStatus)
+    }
+
+    /**
+     * Returns the slot as it should look after a booking of [guests] is cancelled:
+     * the seats are released, and a FULL slot opens again. A CLOSED slot stays closed,
+     * because an admin closed it on purpose.
+     */
+    fun withCancellation(guests: Int): Timeslot {
+        require(guests > 0) { "guests must be positive" }
+        val newCount = (bookedCount - guests).coerceAtLeast(0)
+        val newStatus = if (status == TimeslotStatus.FULL && newCount < capacity) TimeslotStatus.OPEN else status
         return copy(bookedCount = newCount, status = newStatus)
     }
 }

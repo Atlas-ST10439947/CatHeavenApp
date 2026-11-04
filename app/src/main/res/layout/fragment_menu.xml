@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface"
     android:fillViewport="true"
     tools:context=".MenuFragment">
 
@@ -26,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+            android:accessibilityHeading="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Café Menu &amp; Gift Shop"
@@ -65,6 +66,7 @@
                     android:layout_height="140dp"
                     android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
+                    android:contentDescription="A cappuccino from the café"
                     android:src="@drawable/cappucino"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
 
@@ -73,6 +75,7 @@
                     android:layout_height="140dp"
                     android:layout_marginEnd="16dp"
                     android:scaleType="centerCrop"
+                    android:contentDescription="A slice of milk tart"
                     android:src="@drawable/milktart"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
 
@@ -80,6 +83,7 @@
                     android:layout_width="140dp"
                     android:layout_height="140dp"
                     android:scaleType="centerCrop"
+                    android:contentDescription="A toasted sandwich"
                     android:src="@drawable/toastie"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
             </LinearLayout>
@@ -137,6 +141,7 @@
                             android:layout_marginBottom="8dp"/>
 
                         <TextView
+                            android:id="@+id/foodListText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="4dp"
@@ -161,6 +166,7 @@
                             android:layout_marginBottom="8dp"/>
 
                         <TextView
+                            android:id="@+id/giftListText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="4dp"

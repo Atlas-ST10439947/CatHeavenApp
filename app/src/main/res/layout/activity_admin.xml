@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface"
     tools:context=".AdminActivity">
 
     <include
@@ -20,6 +20,7 @@
         android:id="@+id/adminFragmentContainer"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
+        app:layout_constraintWidth_max="@dimen/content_max_width"
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:navGraph="@navigation/admin_nav_graph"

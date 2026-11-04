@@ -10,4 +10,11 @@
     <color name="darkColor">#1A1115</color>
     <color name="errorRed">#B3261E</color>
     <color name="successGreen">#2E7D32</color>
+
+    <!-- Screen and card surfaces. values-night/colors.xml swaps these (and darkColor,
+         textColor, lightGrey, lightPink) for the dark theme, so layouts need no changes.
+         white and pink stay the same in both themes: white is used on pink. -->
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surfaceElevated">#FFFFFFFF</color>
+    <color name="switchTrackOff">#C9BFC2</color>
 </resources>

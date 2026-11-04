@@ -1,6 +1,6 @@
 package com.example.catheavenapp.ui.admin
 
-import android.util.Log
+import com.example.catheavenapp.util.Diagnostics
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +31,7 @@ class AdminUsersViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Log.w("AdminUsers", "Loading users failed", e)
+                Diagnostics.warn("AdminUsers", "Loading users failed", e)
                 AdminUsersState.Failed(
                     "We couldn't load users. Check your connection and that this account is an admin."
                 )

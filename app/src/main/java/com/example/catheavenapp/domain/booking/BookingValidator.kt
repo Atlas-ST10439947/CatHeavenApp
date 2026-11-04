@@ -23,9 +23,9 @@ sealed interface ValidationResult {
 /**
  * Applies Cat Heaven's booking business rules to a request.
  *
- * The app uses this for instant feedback before submitting. The booking
- * Cloud Function enforces the same rules again on the server inside a
- * transaction, because client-side checks alone can be bypassed.
+ * The app uses this for instant feedback before submitting. The Firestore
+ * security rules enforce the guest limit, pricing total and capacity again
+ * on the server, because client-side checks alone can be bypassed.
  */
 class BookingValidator(
     private val maxGuests: Int = MAX_GUESTS,

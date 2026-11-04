@@ -10,23 +10,29 @@ data class BookingItem(
     val date: String,
     val price: String,
     val timeDuration: String,
-    val guests: String
+    val guests: String,
+    val id: String = ""   // the booking document, so a tap can act on it
 )
 
-object DummyData {
-    val upcomingBookings = listOf(
-        BookingItem("UPCOMING", "28 August 2026", "R30", "11:00 AM | 1 Hour", "1 Guest")
-    )
-    val pastBookings = listOf(
-        BookingItem("PAST", "15 July 2026", "R60", "2:00 PM | 2 Hours", "2 Guests")
-    )
-}
-
-class BookingAdapter(private var bookings: List<BookingItem>) :
-    RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
+/** Booking cards for My Bookings and the admin Booking Ledger. [onClick] is optional. */
+class BookingAdapter(
+    private var bookings: List<BookingItem>,
+    private val onClick: ((BookingItem) -> Unit)? = null
+) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
 
     inner class BookingViewHolder(val binding: FragmentUpcomingBookingBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        init {
+            if (onClick != null) {
+                binding.root.isClickable = true
+                binding.root.isFocusable = true
+                binding.root.setOnClickListener {
+                    val position = bindingAdapterPosition
+                    if (position != RecyclerView.NO_POSITION) onClick?.invoke(bookings[position])
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
         val binding = FragmentUpcomingBookingBinding.inflate(
@@ -43,6 +49,8 @@ class BookingAdapter(private var bookings: List<BookingItem>) :
             priceText.text = item.price
             timeText.text = item.timeDuration
             guestText.text = item.guests
+            // Read the whole card as one sentence for screen readers
+            root.contentDescription = "${item.status}, ${item.date}, ${item.timeDuration}, ${item.guests}, ${item.price}"
         }
     }
 

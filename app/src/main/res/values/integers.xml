@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Columns in the Meet the Residents grid; more on wider screens -->
+    <integer name="resident_columns">2</integer>
+</resources>

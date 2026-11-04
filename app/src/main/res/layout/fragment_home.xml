@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +72,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/booking"
                         app:tint="@color/pink"
-                        android:contentDescription="Clock Icon" />
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -135,7 +135,7 @@
                             android:layout_height="24dp"
                             android:src="@drawable/user"
                             app:tint="@color/pink"
-                            android:contentDescription="User Group Icon" />
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -183,7 +183,7 @@
                             android:layout_height="24dp"
                             android:src="@drawable/cats"
                             app:tint="@color/pink"
-                            android:contentDescription="Cat Icon" />
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -239,7 +239,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/location"
                         app:tint="@color/pink"
-                        android:contentDescription="Location Pin Icon" />
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -293,7 +293,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/pawprint"
                         app:tint="@color/darkColor"
-                        android:contentDescription="Pawprint Icon" />
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -370,7 +370,7 @@
                 android:layout_height="18dp"
                 android:src="@drawable/user"
                 app:tint="@color/pink"
-                android:contentDescription="Phone Icon" />
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -387,7 +387,7 @@
                 android:layout_height="18dp"
                 android:src="@drawable/notification"
                 app:tint="@color/pink"
-                android:contentDescription="Email Icon" />
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:layout_width="wrap_content"

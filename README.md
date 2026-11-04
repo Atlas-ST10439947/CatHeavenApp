@@ -88,11 +88,12 @@ Admins (a separate admin area, reached automatically after an admin logs in)
 
 ## Getting started
 
-Install the app 
-1. On GitHub, open Actions, then the latest green Cat Heaven CI run on `main`.
-2. Under Artifacts, download `catheaven-apk` and unzip it.
-3. Copy the `.apk` to an Android phone (Android 7.0 or newer) and open it. If asked, allow installing from this source. Alternatively, with a phone connected over USB: `adb install app-debug.apk`.
-4. Log in with one of the test accounts.
+Install the app
+1. Open the repository's **Releases** page on GitHub and download `CatHeaven-vX.Y.Z.apk` from the latest release.
+2. Open the file on an Android phone (Android 7.0 or newer). If asked, allow installing from this source. Later releases install over the top and keep your login.
+3. Log in with one of the test accounts.
+
+Each release is built, signed and published automatically by the pipeline (see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)). A debug APK from any CI run is also available under Actions > Artifacts.
 
 Build from source (developers)
 1. Open the project in a current Android Studio (it must support Android Gradle Plugin 9.3.3) and let Gradle sync.
@@ -185,10 +186,14 @@ Deployment. Rules, indexes and Hosting are deployed with the Firebase CLI (`fire
 
 ## DevOps: branching and CI
 - Branching: all work happens on feature branches and reaches `main` through pull requests. There are no direct commits to `main`.
-- CI (GitHub Actions, on every pull request and push to `main`):
+- CI (GitHub Actions, on every pull request and push to `main` or `develop`):
   - Android unit tests, debug APK build and lint
   - Firestore Security Rules tests, run against the local Firestore emulator
   - Test reports, lint report and the debug APK are uploaded as build artifacts
+- CD (only after both test jobs pass):
+  - Merge to `main`: the Firestore rules and indexes are deployed to Firebase automatically
+  - Push a version tag (`v1.1.0`): a signed release APK is built and published as a GitHub Release
+- The full deployment lifecycle, the secrets it needs and how to roll back are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## Deviations from the Task 1 plan
 - Android-only client. The booking web app on a `book.catheaven.co.za` subdomain was dropped, so Hosting is a placeholder page.

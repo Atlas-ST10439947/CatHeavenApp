@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface"
     android:fillViewport="true"
     tools:context=".BookingConfirmFragment">
 
@@ -26,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+            android:accessibilityHeading="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Booking Confirmed"
@@ -39,7 +40,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="32dp"
-            android:contentDescription="Success Checkmark Icon"
+            android:importantForAccessibility="no"
             android:src="@drawable/booking"
             app:tint="@color/pink"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +48,7 @@
             app:layout_constraintTop_toBottomOf="@+id/confirmHeader" />
 
         <TextView
+            android:accessibilityHeading="true"
             android:id="@+id/successTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

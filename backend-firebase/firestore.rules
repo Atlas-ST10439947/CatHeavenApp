@@ -42,10 +42,135 @@ service cloud.firestore {
         && after.status == (newCount >= before.capacity ? 'full' : 'open');
     }
 
-    // Public catalogue - anyone can read, only admins can write
+    // ---- Admin-written content validation (mirrors ContentValidator.kt in the app) ----
+
+    function optionalText(data, key, max) {
+      return !(key in data) || (data[key] is string && data[key].size() <= max);
+    }
+
+    // A date that is either not set (missing/null) or not in the future
+    function optionalPastDate(data, key) {
+      return data.get(key, null) == null
+        || (data[key] is timestamp && data[key] <= request.time);
+    }
+
+    function validCat(data) {
+      return data.name is string && data.name.size() >= 1 && data.name.size() <= 40
+        && optionalText(data, 'breed', 40)
+        && optionalText(data, 'gender', 20)
+        && optionalText(data, 'personality', 60)
+        && optionalText(data, 'biography', 1000)
+        && data.get('adoptionStatus', 'resident') in ['available', 'pendingAdoption', 'adopted', 'resident']
+        // photoUrl names a photo bundled with the app, e.g. "amore"
+        && data.get('photoUrl', '') is string
+        && data.get('photoUrl', '').matches('[a-z0-9_]{0,60}')
+        && optionalPastDate(data, 'dateOfBirth')
+        && optionalPastDate(data, 'dateArrived')
+        && (data.get('dateOfBirth', null) == null || data.get('dateArrived', null) == null
+            || data.dateArrived >= data.dateOfBirth)
+        && data.get('updatedAt', request.time) == request.time;
+    }
+
+    function validMenuItem(data) {
+      return data.keys().hasOnly(['name', 'category', 'price', 'isAvailable', 'updatedAt'])
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 60
+        && data.category in ['foodAndDrink', 'giftShop']
+        && (data.get('price', null) == null
+            || (data.price is int && data.price >= 0 && data.price <= 5000))
+        && data.get('isAvailable', true) is bool
+        && data.get('updatedAt', request.time) == request.time;
+    }
+
+    // ---- Supporter cancel / reschedule (mirrors BookingChanges.kt in the app) ----
+
+    function bookingDoc(id) {
+      return /databases/$(database)/documents/bookings/$(id);
+    }
+
+    function slotDoc(id) {
+      return /databases/$(database)/documents/timeslots/$(id);
+    }
+
+    // A supporter can move or cancel their own confirmed booking until the day before the visit
+    function ownerCanChange(booking) {
+      return signedIn()
+        && booking.supporterId == request.auth.uid
+        && booking.status == 'confirmed'
+        && booking.slotDate > request.time;
+    }
+
+    // The supporter's booking stops using this slot in the same write, so its seats come back.
+    // FULL becomes OPEN; OPEN and CLOSED stay as they are.
+    function isSeatRelease(timeslotId) {
+      let before = resource.data;
+      let after = request.resource.data;
+      let bookingBefore = get(bookingDoc(after.lastBookingId)).data;
+      let bookingAfter = getAfter(bookingDoc(after.lastBookingId)).data;
+      return after.diff(before).affectedKeys().hasOnly(['bookedCount', 'status', 'lastBookingId'])
+        && ownerCanChange(bookingBefore)
+        && bookingBefore.timeslotId == timeslotId
+        && (bookingAfter.status == 'cancelled' || bookingAfter.timeslotId != timeslotId)
+        && after.bookedCount == before.bookedCount - bookingBefore.numberOfGuests
+        && after.bookedCount >= 0
+        && after.status == (before.status == 'full' ? 'open' : before.status);
+    }
+
+    // The supporter's existing booking moves onto this slot in the same write
+    function isRescheduleIncrement(timeslotId) {
+      let before = resource.data;
+      let after = request.resource.data;
+      let bookingBefore = get(bookingDoc(after.lastBookingId)).data;
+      let bookingAfter = getAfter(bookingDoc(after.lastBookingId)).data;
+      let newCount = before.bookedCount + bookingBefore.numberOfGuests;
+      return after.diff(before).affectedKeys().hasOnly(['bookedCount', 'status', 'lastBookingId'])
+        && ownerCanChange(bookingBefore)
+        && bookingBefore.timeslotId != timeslotId
+        && bookingAfter.timeslotId == timeslotId
+        && bookingAfter.status == 'confirmed'
+        && before.status == 'open'
+        && after.bookedCount == newCount
+        && newCount <= before.capacity
+        && after.status == (newCount >= before.capacity ? 'full' : 'open');
+    }
+
+    function slotCountChange(slotId) {
+      return getAfter(slotDoc(slotId)).data.bookedCount - get(slotDoc(slotId)).data.bookedCount;
+    }
+
+    // Cancel: only the status fields change, and the slot gives the seats back in the same write
+    function isOwnerCancel() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return ownerCanChange(resource.data)
+        && changed.hasOnly(['status', 'cancelledAt', 'cancelledBy'])
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.cancelledBy == 'supporter'
+        && request.resource.data.cancelledAt == request.time
+        && slotCountChange(resource.data.timeslotId) == -resource.data.numberOfGuests;
+    }
+
+    // Reschedule: only the slot fields change, to a future slot whose details match,
+    // with the seats moved from the old slot to the new one in the same write
+    function isOwnerReschedule() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let next = request.resource.data;
+      let newSlot = getAfter(slotDoc(next.timeslotId)).data;
+      return ownerCanChange(resource.data)
+        && changed.hasOnly(['timeslotId', 'slotDate', 'slotStart', 'rescheduledAt'])
+        && next.timeslotId != resource.data.timeslotId
+        && next.rescheduledAt == request.time
+        && next.slotDate == newSlot.date
+        && next.slotStart == newSlot.startTime
+        && next.slotDate > request.time
+        && slotCountChange(next.timeslotId) == resource.data.numberOfGuests
+        && (!exists(slotDoc(resource.data.timeslotId))
+            || slotCountChange(resource.data.timeslotId) == -resource.data.numberOfGuests);
+    }
+
+    // Public catalogue - anyone can read, only admins can write, and writes must be valid
     match /cats/{catId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, update: if isAdmin() && validCat(request.resource.data);
+      allow delete: if isAdmin();
 
       match /updates/{updateId} {
         allow read: if true;
@@ -56,7 +181,10 @@ service cloud.firestore {
     match /timeslots/{timeslotId} {
       allow read: if true;
       allow create, delete: if isAdmin();
-      allow update: if isAdmin() || isBookingIncrement(timeslotId);
+      allow update: if isAdmin()
+                    || isBookingIncrement(timeslotId)
+                    || isRescheduleIncrement(timeslotId)
+                    || isSeatRelease(timeslotId);
     }
 
     match /pricingTiers/{tierId} {
@@ -76,14 +204,51 @@ service cloud.firestore {
 
     match /menuItems/{menuItemId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, update: if isAdmin() && validMenuItem(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---- Profile validation (mirrors ProfileValidator.kt in the app) ----
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function validName(name) {
+      return name is string && name.size() >= 1 && name.size() <= 80;
+    }
+
+    // Empty, or an optional leading + followed by 7-20 digits or spaces
+    function validPhone(phone) {
+      return phone is string && (phone == '' || phone.matches('[+]?[0-9 ]{7,20}'));
+    }
+
+    function validNotificationPrefs(prefs) {
+      return prefs is map
+        && prefs.keys().hasOnly(['email', 'inApp'])
+        && prefs.get('email', true) is bool
+        && prefs.get('inApp', true) is bool;
+    }
+
+    // Supporters may only change these fields, and each one that changes must be valid.
+    // role, email and dateJoined can never be edited from the app.
+    function validProfileChange() {
+      let data = request.resource.data;
+      return changedKeys().hasOnly(['fullName', 'phone', 'location', 'notificationPrefs'])
+        && (!('fullName' in changedKeys()) || validName(data.fullName))
+        && (!('phone' in changedKeys()) || validPhone(data.phone))
+        && (!('location' in changedKeys()) || (data.location is string && data.location.size() <= 100))
+        && (!('notificationPrefs' in changedKeys()) || validNotificationPrefs(data.notificationPrefs));
     }
 
     // User accounts - only the account owner can read/update their own profile
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create: if isOwner(uid) && request.resource.data.role == 'supporter';
-      allow update: if isOwner(uid) && request.resource.data.role == resource.data.role;
+      allow create: if isOwner(uid)
+                    && request.resource.data.role == 'supporter'
+                    && request.resource.data.keys().hasOnly(['fullName', 'email', 'phone', 'role', 'dateJoined'])
+                    && validName(request.resource.data.fullName);
+      allow update: if isOwner(uid) && validProfileChange();
       allow delete: if isAdmin();
     }
 
@@ -104,7 +269,9 @@ service cloud.firestore {
                     && getAfter(/databases/$(database)/documents/timeslots/$(request.resource.data.timeslotId))
                          .data.lastBookingId == bookingId;
 
-      allow update, delete: if isAdmin();
+      // Admins can change anything; supporters can only cancel or reschedule their own
+      allow update: if isAdmin() || isOwnerCancel() || isOwnerReschedule();
+      allow delete: if isAdmin();
     }
 
     // Paw Parent enrolments

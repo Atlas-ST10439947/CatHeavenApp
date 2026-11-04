@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark theme palette: Cat Heaven pink on the brand's dark brown.
+     Same names as values/colors.xml, so every layout picks these up automatically. -->
+<resources>
+    <!-- Surfaces -->
+    <color name="surface">#1A1115</color>
+    <color name="surfaceElevated">#261A1F</color>
+    <color name="lightGrey">#33262C</color>
+    <color name="lightPink">#5A2B32</color>
+    <color name="switchTrackOff">#4E4046</color>
+
+    <!-- Text on surfaces (light on dark) -->
+    <color name="darkColor">#F5EDEF</color>
+    <color name="textColor">#DCCFD3</color>
+
+    <!-- Status colours, lightened so they stay readable on dark surfaces -->
+    <color name="errorRed">#F2B8B5</color>
+    <color name="successGreen">#81C995</color>
+</resources>

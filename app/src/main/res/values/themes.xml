@@ -1,8 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme (light mode; values-night overrides for dark) -->
+    <!-- Light theme. values-night/themes.xml provides the dark version of Base. -->
     <style name="Base.Theme.CatHeavenApp" parent="Theme.Material3.DayNight.NoActionBar" />
 
-    <style name="Theme.CatHeavenApp" parent="Base.Theme.CatHeavenApp" />
+    <!-- Brand colours shared by both themes. The colour resources themselves switch
+         between values/ and values-night/, so this block stays the same. -->
+    <style name="Theme.CatHeavenApp" parent="Base.Theme.CatHeavenApp">
+        <item name="colorPrimary">@color/pink</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/lightPink</item>
+        <item name="colorOnPrimaryContainer">@color/darkColor</item>
+        <item name="colorSecondary">@color/pink</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/darkColor</item>
+        <item name="colorError">@color/errorRed</item>
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="android:windowBackground">@color/surface</item>
+    </style>
 
     <style name="Theme.CatHeavenApp.Launcher" parent="Theme.CatHeavenApp">
         <item name="android:windowBackground">@color/pink</item>
@@ -14,7 +28,8 @@
         <item name="colorSecondaryContainer">@color/pink</item>
     </style>
 
-    <style name="PinkCalendarTheme" parent="ThemeOverlay.AppCompat.Light">
+    <!-- DayNight, so the booking calendar is readable in both themes -->
+    <style name="PinkCalendarTheme" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="colorAccent">@color/pink</item>
         <item name="colorPrimary">@color/pink</item>
 

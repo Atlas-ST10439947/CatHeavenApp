@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Switch track: Cat Heaven pink when on, grey when off, so the two states are easy to tell apart -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/pink" android:state_checked="true" />
+    <item android:color="@color/switchTrackOff" />
+</selector>

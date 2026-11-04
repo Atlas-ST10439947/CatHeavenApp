@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface"
     tools:context=".UpcomingBookingsFragment">
 
     <!-- Header Section -->
@@ -25,11 +25,12 @@
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:contentDescription="Booking Calendar Icon"
+            android:importantForAccessibility="no"
             android:src="@drawable/booking"
             app:tint="@color/white" />
 
         <TextView
+            android:accessibilityHeading="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

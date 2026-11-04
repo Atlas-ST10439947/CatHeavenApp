@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/surface">
 
     <LinearLayout
         android:id="@+id/adminContentHeader"
@@ -20,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:accessibilityHeading="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Content Management"
@@ -78,6 +79,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contentToggleGroup" />
 
+    <!-- Shown while loading, on errors, and when the list is empty -->
+    <TextView
+        android:id="@+id/emptyStateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="48dp"
+        android:accessibilityLiveRegion="polite"
+        android:gravity="center"
+        android:textColor="@color/textColor"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contentToggleGroup"
+        tools:text="No cats yet. Tap + to add one."
+        tools:visibility="visible" />
+
     <!-- Floating Action Button to Add New Cat/Menu Item -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddContent"
@@ -85,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:contentDescription="Add New Item"
+        android:contentDescription="Add a new cat"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/pink"
         app:tint="@color/white"

@@ -1,28 +1,44 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
+
+// Release signing comes from environment variables, so no key or password is ever
+// committed. CI sets them from GitHub secrets (see .github/workflows/android-ci.yml).
+// Without them, local release builds fall back to the debug key so they still install.
+val releaseKeystorePath: String? = providers.environmentVariable("CATHEAVEN_KEYSTORE_PATH").orNull
 
 android {
     namespace = "com.example.catheavenapp"
-    compileSdk =37
-
-    buildFeatures {
-        viewBinding = true
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.catheavenapp"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        // CI passes the run number and the release tag, so every published APK
+        // has a higher versionCode and installs over the previous one
+        versionCode = providers.environmentVariable("VERSION_CODE").orNull?.toIntOrNull() ?: 1
+        versionName = providers.environmentVariable("VERSION_NAME").orNull ?: "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            if (releaseKeystorePath != null) {
+                storeFile = file(releaseKeystorePath)
+                storePassword = providers.environmentVariable("CATHEAVEN_KEYSTORE_PASSWORD").orNull
+                keyAlias = providers.environmentVariable("CATHEAVEN_KEY_ALIAS").orNull
+                keyPassword = providers.environmentVariable("CATHEAVEN_KEY_PASSWORD").orNull
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName(if (releaseKeystorePath != null) "release" else "debug")
             optimization {
                 enable = false
             }
@@ -41,6 +57,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.crashlytics)   // crash and error reporting from supporters' phones
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.activity.ktx)

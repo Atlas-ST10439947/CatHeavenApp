@@ -4,8 +4,11 @@ import com.example.catheavenapp.domain.model.AdoptionStatus
 import com.example.catheavenapp.domain.model.Cat
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 interface CatRepository {
     /** Every cat in the catalogue, sorted by name. Anyone may read cats. */
@@ -13,6 +16,15 @@ interface CatRepository {
 
     /** One cat by its document ID, or null if it doesn't exist. */
     suspend fun cat(id: String): Cat?
+
+    /**
+     * Creates the cat when its id is blank, otherwise updates it. Returns the
+     * document ID. Admin only: the security rules reject anyone else.
+     */
+    suspend fun save(cat: Cat): String
+
+    /** Admin only. */
+    suspend fun delete(id: String)
 }
 
 class FirestoreCatRepository(
@@ -27,6 +39,17 @@ class FirestoreCatRepository(
 
     override suspend fun cat(id: String): Cat? =
         db.collection(CATS).document(id).get().await().toCat()
+
+    override suspend fun save(cat: Cat): String {
+        val doc = if (cat.id.isBlank()) db.collection(CATS).document() else db.collection(CATS).document(cat.id)
+        // merge() keeps any extra fields added in the console, e.g. by an earlier seed script
+        doc.set(cat.toFirestore(), SetOptions.merge()).await()
+        return doc.id
+    }
+
+    override suspend fun delete(id: String) {
+        db.collection(CATS).document(id).delete().await()
+    }
 
     private companion object {
         const val CATS = "cats"
@@ -53,3 +76,17 @@ private fun DocumentSnapshot.toCat(): Cat? {
 private fun DocumentSnapshot.text(field: String): String = (get(field) as? String).orEmpty()
 
 private fun DocumentSnapshot.millis(field: String): Long? = (get(field) as? Timestamp)?.toDate()?.time
+
+/** Every field the admin form edits. Missing dates are written as null so a cleared date stays cleared. */
+private fun Cat.toFirestore(): Map<String, Any?> = mapOf(
+    "name" to name.trim(),
+    "breed" to breed.trim(),
+    "gender" to gender.trim(),
+    "personality" to personality.trim(),
+    "biography" to biography.trim(),
+    "adoptionStatus" to adoptionStatus.value,
+    "photoUrl" to photoUrl,
+    "dateOfBirth" to dateOfBirthMillis?.let { Timestamp(Date(it)) },
+    "dateArrived" to dateArrivedMillis?.let { Timestamp(Date(it)) },
+    "updatedAt" to FieldValue.serverTimestamp()
+)
