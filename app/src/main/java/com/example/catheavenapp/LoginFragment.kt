@@ -2,12 +2,19 @@ package com.example.catheavenapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
+import android.widget.FrameLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentLoginBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -60,9 +67,59 @@ class LoginFragment : Fragment() {
                 }
         }
 
+        binding.forgotPasswordTextView.setOnClickListener { showPasswordReset() }
+
         binding.registerNavButton.setOnClickListener {
             findNavController().navigate(R.id.action_login_to_register)
         }
+    }
+
+    /**
+     * Sends Firebase's password reset email. The message is the same whether or not an
+     * account exists, so the screen can't be used to find out who has an account.
+     */
+    private fun showPasswordReset() {
+        val context = requireContext()
+        val field = TextInputLayout(context).apply { hint = "Email address" }
+        val input = TextInputEditText(field.context).apply {
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            setText(binding.emailEditText.text?.toString()?.trim())
+        }
+        field.addView(input)
+        val padding = (24 * resources.displayMetrics.density).toInt()
+        val container = FrameLayout(context).apply {
+            setPadding(padding, padding / 3, padding, 0)
+            addView(field)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle("Reset your password")
+            .setMessage("We'll email you a link to choose a new password.")
+            .setView(container)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Send link", null)   // set below, so an invalid email keeps the dialog open
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val email = input.text?.toString()?.trim().orEmpty()
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    field.error = "Please enter a valid email address"
+                    return@setOnClickListener
+                }
+                dialog.dismiss()
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener { task ->
+                    val views = _binding ?: return@addOnCompleteListener
+                    val message = if (!task.isSuccessful && task.exception is FirebaseNetworkException) {
+                        "We couldn't send the email. Check your connection and try again."
+                    } else {
+                        "If there's an account for $email, a reset link is on its way. Check your inbox and spam folder."
+                    }
+                    Snackbar.make(views.root, message, Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
+        dialog.show()
     }
 
     private fun openHome(target: Class<*>) {

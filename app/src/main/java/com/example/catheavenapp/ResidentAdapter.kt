@@ -1,5 +1,6 @@
 package com.example.catheavenapp
 
+import com.example.catheavenapp.ui.admin.CatPhotos
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +40,7 @@ class ResidentAdapter(
             imageView.contentDescription = "Photo of ${cat.name}"
 
             // Load the image from res/drawable based on the Firestore string
-            val resourceId = context.resources.getIdentifier(cat.photoUrl, "drawable", context.packageName)
+            val resourceId = context.resources.getIdentifier(CatPhotos.drawableKey(cat.photoUrl, cat.name), "drawable", context.packageName)
 
             if (resourceId != 0) {
                 imageView.setImageResource(resourceId)

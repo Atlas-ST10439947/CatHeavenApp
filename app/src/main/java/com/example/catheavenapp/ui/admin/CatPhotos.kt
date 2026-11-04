@@ -18,4 +18,11 @@ object CatPhotos {
 
     fun label(key: String): String =
         if (key == NONE) "No photo (paw print)" else key.replaceFirstChar { it.uppercase() }
+
+    /**
+     * The drawable to show for a cat: its photoUrl, or, when that's blank, a bundled photo
+     * named after the cat (e.g. "Tutu" -> tutu.jpg). Lower-cased, because drawable names are.
+     */
+    fun drawableKey(photoUrl: String, catName: String): String =
+        photoUrl.trim().lowercase().ifBlank { catName.trim().lowercase().replace(Regex("[^a-z0-9_]"), "") }
 }
