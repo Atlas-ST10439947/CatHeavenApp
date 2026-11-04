@@ -13,6 +13,8 @@ import com.example.catheavenapp.domain.model.TimeslotStatus
 import com.example.catheavenapp.ui.admin.AdminScheduleViewModel
 import com.example.catheavenapp.ui.admin.ScheduleDayState
 import com.example.catheavenapp.ui.admin.ScheduleSaveState
+import com.example.catheavenapp.domain.booking.DefaultSchedule
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -71,11 +73,22 @@ class AdminScheduleFragment : Fragment() {
         viewModel.saveState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ScheduleSaveState.Saved -> {
+                    // Capacity is per slot, so say so: "6 time slots, up to 2 guests each"
+                    val guests = if (state.capacity == 1) "1 guest" else "${state.capacity} guests"
                     Snackbar.make(
                         binding.root,
-                        "Saved ${state.slotCount} time slots for ${dayLabel(selectedDate)}",
+                        "Saved ${state.slotCount} time slots for ${dayLabel(selectedDate)}, up to $guests each",
                         Snackbar.LENGTH_LONG
                     ).show()
+                    viewModel.onSaveMessageShown()
+                }
+                is ScheduleSaveState.OpenedDefaults -> {
+                    val message = if (state.days == 0) {
+                        "Every opening day in the next ${state.weeks} weeks already has times."
+                    } else {
+                        "Opened ${state.days} days (${state.slots} time slots) over the next ${state.weeks} weeks"
+                    }
+                    Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
                     viewModel.onSaveMessageShown()
                 }
                 is ScheduleSaveState.Failed -> {
@@ -96,6 +109,19 @@ class AdminScheduleFragment : Fragment() {
             viewModel.save(selectedDate, capacity, binding.switchOpenStatus.isChecked)
         }
 
+        binding.btnOpenDefaults.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Open the next ${DefaultSchedule.DEFAULT_WEEKS} weeks?")
+                .setMessage(
+                    "Every Tuesday to Saturday that has no times yet gets hourly slots from 10:00 to 16:00, " +
+                        "for up to ${DefaultSchedule.DEFAULT_CAPACITY} guests each. Days you've already set up " +
+                        "or closed are not changed."
+                )
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Open weeks") { _, _ -> viewModel.openDefaultWeeks() }
+                .show()
+        }
+
         viewModel.loadDay(selectedDate)
     }
 
@@ -103,6 +129,7 @@ class AdminScheduleFragment : Fragment() {
         val day = viewModel.dayState.value
         val saving = viewModel.saveState.value == ScheduleSaveState.Saving
         binding.btnSaveSchedule.isEnabled = day is ScheduleDayState.Loaded && !saving
+        binding.btnOpenDefaults.isEnabled = !saving
         binding.btnSaveSchedule.text = when {
             saving -> "Saving…"
             day is ScheduleDayState.Loaded && day.slots.isEmpty() -> "Create Time Slots"
