@@ -134,11 +134,7 @@ firebase deploy --only firestore:indexes
 firebase deploy --only hosting
 
 ## Test accounts
-Dev-only accounts for the `catheaven-dev` Firebase project.
-
-| Role | Email | Password | Lands on |  
-| Admin | `admin@test.com` | `Test1234!` | Admin screens |  
-| Supporter | `supporter@test.com` | `P123456/` | Main app |  
+Test logins for the markers are supplied separately in the submitted documents and in the ARC submission comments. They are not published in this repository.  
 
 ## Backend: database
 Cloud Firestore (Standard edition) in the South Africa region, which became available after Task 1 was written and gives lower latency for local users than the originally planned europe-west.
