@@ -48,4 +48,30 @@ class TimeslotTest {
         assertEquals(TimeslotStatus.CLOSED, TimeslotStatus.fromValue("something-else"))
         assertEquals(TimeslotStatus.CLOSED, TimeslotStatus.fromValue(null))
     }
+
+    // ---- Start time (so earlier times today can't be booked) ----
+
+    private val utc = java.util.TimeZone.getTimeZone("UTC")
+    private val midnight5Nov2026Utc = 1_793_836_800_000L   // Thu 5 Nov 2026, 00:00 UTC
+    private fun slotAt(start: String) =
+        Timeslot("slot-t", midnight5Nov2026Utc, start, "11:00", SlotType.GENERAL_VISIT, 10, 0, TimeslotStatus.OPEN)
+
+    @Test
+    fun startMillis_isTheDayPlusTheStartTime() {
+        val expected = midnight5Nov2026Utc + (10 * 60 + 30) * 60_000L
+        assertEquals(expected, slotAt("10:30").startMillis(utc))
+    }
+
+    @Test
+    fun hasStarted_onlyOnceTheStartTimeIsReached() {
+        val start = slotAt("10:00").startMillis(utc)
+        assertFalse(slotAt("10:00").hasStarted(start - 60_000, utc))
+        assertTrue(slotAt("10:00").hasStarted(start, utc))
+        assertTrue(slotAt("10:00").hasStarted(start + 7 * 3_600_000L, utc))   // 17:00 the same day
+    }
+
+    @Test
+    fun unreadableStartTime_usesTheStartOfTheDay() {
+        assertEquals(midnight5Nov2026Utc, slotAt("soon").startMillis(utc))
+    }
 }

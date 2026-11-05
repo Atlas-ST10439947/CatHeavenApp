@@ -10,6 +10,7 @@ sealed class BookingRejection(val message: String) {
     object NoTimeslot : BookingRejection("Please choose a time slot.")
     object SlotClosed : BookingRejection("This time slot is no longer available. Please choose another.")
     object SlotFull : BookingRejection("This time slot has just been fully booked. Please choose another.")
+    object SlotStarted : BookingRejection("This time has already passed. Please choose a later time or another day.")
     data class NotEnoughSpace(val remaining: Int) : BookingRejection(
         if (remaining == 1) "Only 1 place is left in this slot."
         else "Only $remaining places are left in this slot."
@@ -50,6 +51,9 @@ object BookingPlanner {
         }
         if (slot.status == TimeslotStatus.CLOSED) {
             return BookingDecision.Rejected(BookingRejection.SlotClosed)
+        }
+        if (slot.hasStarted(nowMillis)) {
+            return BookingDecision.Rejected(BookingRejection.SlotStarted)
         }
         if (slot.status == TimeslotStatus.FULL || slot.remainingCapacity == 0) {
             return BookingDecision.Rejected(BookingRejection.SlotFull)

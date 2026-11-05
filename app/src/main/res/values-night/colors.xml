@@ -6,6 +6,7 @@
     <color name="surface">#1A1115</color>
     <color name="surfaceElevated">#261A1F</color>
     <color name="lightGrey">#33262C</color>
+    <color name="dialogSurface">#33262C</color>
     <color name="lightPink">#5A2B32</color>
     <color name="switchTrackOff">#4E4046</color>
 

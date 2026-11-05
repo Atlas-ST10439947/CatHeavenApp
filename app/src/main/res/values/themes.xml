@@ -12,6 +12,8 @@
         <item name="colorSecondary">@color/pink</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">@color/surface</item>
+        <!-- Material 3 dialogs use this; left unset they fall back to Material's lavender -->
+        <item name="colorSurfaceContainerHigh">@color/dialogSurface</item>
         <item name="colorOnSurface">@color/darkColor</item>
         <item name="colorError">@color/errorRed</item>
         <item name="android:colorBackground">@color/surface</item>

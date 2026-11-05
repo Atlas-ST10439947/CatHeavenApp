@@ -16,5 +16,7 @@
          white and pink stay the same in both themes: white is used on pink. -->
     <color name="surface">#FFFFFFFF</color>
     <color name="surfaceElevated">#FFFFFFFF</color>
+    <!-- Dialogs (Appearance, booking details, confirmations) -->
+    <color name="dialogSurface">#FFFFFFFF</color>
     <color name="switchTrackOff">#C9BFC2</color>
 </resources>

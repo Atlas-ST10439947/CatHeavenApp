@@ -108,4 +108,26 @@ class BookingPlannerTest {
     fun `booking reference uses the year and the start of the booking id`() {
         assertEquals("CH-2026-K3F9QZ", BookingPlanner.referenceFor("k3f9qzAbCdEf", 2026))
     }
+
+    @Test
+    fun `a time that has already passed today is rejected`() {
+        val slot = slot()
+        val result = BookingPlanner.decide(
+            slot, draft(), quote(),
+            bookingId = "k3f9qzAbCdEf", supporterId = "user-1",
+            nowMillis = slot.startMillis() + 60_000, year = 2026
+        )
+        assertEquals(BookingDecision.Rejected(BookingRejection.SlotStarted), result)
+    }
+
+    @Test
+    fun `a later time today can still be booked`() {
+        val slot = slot()
+        val result = BookingPlanner.decide(
+            slot, draft(), quote(),
+            bookingId = "k3f9qzAbCdEf", supporterId = "user-1",
+            nowMillis = slot.startMillis() - 60_000, year = 2026
+        )
+        assertEquals(true, result is BookingDecision.Accepted)
+    }
 }
