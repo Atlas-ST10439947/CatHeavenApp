@@ -134,7 +134,7 @@ firebase deploy --only firestore:indexes
 firebase deploy --only hosting
 
 ## Test accounts
-Test logins for the markers are supplied separately in the submitted documents and in the ARC submission comments. They are not published in this repository.  
+Test logins for the markers are supplied separately in the submitted documents, user guide and in the ARC submission comments. They are not published in this repository.  
 
 ## Backend: database
 Cloud Firestore (Standard edition) in the South Africa region, which became available after Task 1 was written and gives lower latency for local users than the originally planned europe-west.
