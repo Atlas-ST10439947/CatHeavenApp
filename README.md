@@ -2,10 +2,17 @@
 
 An Android app and Firebase backend for Cat Heaven, a South African Rescue Cat Cafe in Somerset West. Supporters can browse the resident cats and the cafe menu and book visit or snack time slots online, and staff manage bookings, timeslots, content and users from an admin area. It replaces the current manual WhatsApp booking process.
 
-Built by Echo Solutions for INSY7315 (Task 2: Code and Implementation).
+Built by Echo Solutions for INSY7315 Task 2: Code and Implementation & Task 3: Final Submission 
 
-### App Presentation & Demo Video Link
+## Figma and Video Demo Links
+### Figma Prototype
+https://www.figma.com/proto/6pDfuPbZjcauq0XWeEB5GF/Cat-Heaven-Bookinghttps://www.figma.com/proto/6pDfuPbZjcauq0XWeEB5GF/Cat-Heaven-Booking-Platform?node-id=7020-3430&t=KQVaGNxCFet1znuz-1/Platform?node-id=7020-3430&t=KQVaGNxCFet1znuz-1/
+
+### App Presentation & Demo Video Link Task 2
 https://youtu.be/KVWhCGPmrSw 
+
+### App Demo Video Link Task 3
+[LINK]
 
 > All cat, shop and menu data is placeholder data pending final confirmation from Cat Heaven. An administrator can edit it at any time without any structural change.
 
@@ -24,13 +31,14 @@ https://youtu.be/KVWhCGPmrSw
 - [DevOps: branching and CI](#devops-branching-and-ci)
 - [Deviations from the Task 1 plan](#deviations-from-the-task-1-plan)
 - [Evidence](#evidence)
-- [Hosting Deployment and Stability Rationale](#Hosting Deployment and Stability Rationale)
+- [Task 3: scope adjustment and improvements](#task-3-scope-adjustment-and-improvements)
+- [Distribution and go-live](#distribution-and-go-live)
 
 ## Team and responsibilities
 | Member | Main responsibilities |  
 | Amelia Swart (Atlas)  - ST10439947 | Front end: visual design, UX and feedback, responsiveness and accessibility; presentation and demo |  
 | Courtney Martin - ST10439401 | Database, security rules, authentication, Firebase hosting and deployment rationale |  
-| Wiehan Smit - ST10446545 | Booking logic and data flow, APIs, programming structure, CI/CD pipeline |  
+| Wiehan Smit - ST10446545 | Booking logic and data flow, programming structure, CI/CD pipeline |  
 
 ## Team attendance and communication
 
@@ -40,7 +48,7 @@ We worked as a team of three (Amelia, Courtney and Wiehan) and attended meetings
 At the start of Task 2 we divided the rubric between us in a shared work-split sheet (`Cat Heaven Task 2 Work Split`) and confirmed it in our team WhatsApp group chat on 22/09/2026
 - Amelia: front end visual design, UX and feedback, responsiveness and accessibility and the presentation and demo
 - Courtney: database, security rules, authentication, and Firebase hosting and deployment rationale
-- Wiehan: booking logic and data flow, APIs and the CI/CD pipeline
+- Wiehan: booking logic and data flow and the CI/CD pipeline
 
 Each of us also contributes to the branching marks by working on feature branches and merging through pull requests.
 
@@ -52,9 +60,14 @@ We used the WhatsApp group chat for coordination, for example:
 
 ### Attendance record
 | Date | Session type | Medium | Amelia | Courtney | Wiehan |   
-| `22/09/20206` | Part 2 starting meeting | In person | Present | Present | Present |  
-| `<28/09/2026>` | Internal group meeting | online | Present | Present | Present |   
-| `<1/10/2026>` | Internal group meeting | online | Present | Present | Present |   
+| `22/09/2026` | Part 2 starting meeting | In person | Present | Present | Present |  
+| `28/09/2026` | Internal group meeting | online | Present | Present | Present |   
+| `1/10/2026` | Internal group meeting | online | Present | Present | Present |   
+
+| Date | Session type | Medium | Amelia | Courtney | Wiehan |   
+| `15/10/2026` | Part 3 starting meeting | In person | Present | Present | Present |  
+| `30/10/2026` | Internal group meeting | online | Present | Present | Present |   
+| `2/11/2026` | Internal group meeting | online | Present | Present | Present |   
 
 
 ## Features and screens
@@ -71,6 +84,7 @@ Admins (a separate admin area, reached automatically after an admin logs in)
 - Manage the timeslot schedule
 - Manage content (cats and menu)
 - View users
+
 
 ## Tech stack
 - App: Kotlin, Android (minSdk 24, target and compile SDK 37), View Binding, Navigation component (separate graphs for launch, main app and admin), Material components, RecyclerView
@@ -119,11 +133,6 @@ firebase deploy --only firestore:rules
 firebase deploy --only firestore:indexes
 firebase deploy --only hosting
 
-
-## Distribution and go-live
-- Now (Task 2): the backend is hosted on Firebase, and the app is delivered as a debug APK built by CI and installable on any Android 7.0+ device, which is how it is demonstrated to the client.
-- After client approval: the app will be published on Google Play under Cat Heaven's own developer account, so the non-profit owns the store listing. The plan from Task 1 applies: internal testing, then closed testing with Cat Heaven staff, then a staged production rollout.
-
 ## Test accounts
 Dev-only accounts for the `catheaven-dev` Firebase project.
 
@@ -140,7 +149,7 @@ Cloud Firestore (Standard edition) in the South Africa region, which became avai
 | `pricingTiers` | Visit durations and price per person | Quoted price only, no payments are stored |  
 | `categories` / `products` | Gift shop display | Display only, no online purchasing |  
 | `menuItems` | Cafe menu | Display only |  
-| `users` | One profile per Firebase Auth account | Document ID equals the Auth UID. `blocked: true` (set by an admin) signs the person out at login and stops them booking |  
+| `users` | One profile per Firebase Auth account | Document ID equals the Auth UID |  
 | `bookings` | Visit bookings | Created by the app at runtime |  
 | `pawParentEnrolments` | Supporter-to-cat sponsorship links | Created by the app at runtime |  
 
@@ -154,16 +163,19 @@ Design decisions:
 All access is decided server-side by `backend-firebase/firestore.rules`, and client code is treated as untrusted.
 
 | Collection | Anonymous | Signed-in supporter | Admin |  
-| `cats`, `timeslots`, `pricingTiers`, `categories`, `products`, `menuItems` | Read | Read | Read and write |  
-| `users` | None | Read and update own profile only (never `role` or `blocked`) | Read any profile; block or unblock supporters (not admins) |  
+| `cats`, `menuItems` | Read | Read | Read and write |  
+| `timeslots`, `pricingTiers`, `categories`, `products` | Read | Read | Read and write | 
+| `users` | None | Read and update own profile only | Read any profile |  
 | `bookings` | None | Create own (1 to 8 guests), read own | Read, update, delete all |  
 | `pawParentEnrolments` | None | Create own, read own, cancel own | Full access |  
 
 Key points:
-- Admin rights come from a custom claim (`admin: true`) set with the Firebase Admin SDK (`setAdmin.js`), not from a field in the database. A client cannot grant itself admin.
-- Users cannot self-assign a role: a profile can only be created with `role == 'supporter'`, and `role` cannot be changed by the owner afterwards.
-- Group size cap: a booking must have between 1 and 8 guests, enforced in the rules, not only in the UI.
-- Automated tests in `rules.test.js` cover: anonymous users can read cats, non-admins cannot edit cats, admins can edit cats, non-admins cannot read other users' profiles, admins can, a new user cannot register as admin, and a new user can register as a supporter.
+Admin rights come from the admin: true custom claim (set with the Firebase Admin SDK in setAdmin.js), or from role == 'admin' on the user's own users document. Users cannot set or change their own role, so only someone with Firebase console access can create an admin.
+Users cannot self-assign a role. A profile can only be created with role == 'supporter', and role, email and dateJoined cannot be edited from the app.
+Booking integrity. A booking must have 1 to 8 guests, status confirmed, and totalDue equal to price times guests. The matching time slot must increase bookedCount by exactly the booked guests and stay within capacity, in the same write (isBookingIncrement).
+Cancel and reschedule are enforced in the rules: a supporter can only change their own confirmed booking before the visit day, and the seats must move between slots in the same write.
+Content validation. Writes to cats and menuItems are checked for type, length and range (for example a name of 1 to 40 characters, valid adoption status, no future birth date, price 0 to 5000). The rules mirror ContentValidator.kt in the app.
+Automated tests. rules.test.js contains 41 checks covering profiles, role self-assignment, cat and menu validation, the booking ledger, seat release, cancel and reschedule.
 
 ## Backend: authentication
 Firebase Authentication with email and password.
@@ -195,24 +207,36 @@ Deployment. Rules, indexes and Hosting are deployed with the Firebase CLI (`fire
   - Push a version tag (`v1.1.0`): a signed release APK is built and published as a GitHub Release
 - The full deployment lifecycle, the secrets it needs and how to roll back are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
+## Task 3: scope adjustment and improvements
+
+Scope adjustment. The Task 1 plan had two clients on one Firebase backend: an Android app and a booking website on a subdomain of Cat Heaven's existing site. The owner had limited availability for personal reasons, so we could not get access to the existing website. We therefore focused on one complete Android client first, with the booking website planned for 2027. Our marker confirmed on 20 October 2026 that a website was not required (brief section 9.4.3). The data model, security rules and authentication carry over to a future website without redesign.
+
+## Improvements from Task 2 feedback (full detail in the final report):
+
+- Admin content dialogs (add and edit cats and menu items) with validation, in the app and in the rules
+- Profile editing and notification preferences saved to Firestore
+- Dark theme, and tablet and landscape resources
+- Type and range checks on admin-written data, with emulator tests
+- Crashlytics monitoring
+- Automated rules deployment and signed release APKs through the pipeline
+- Supporters can cancel and reschedule their own bookings
+
+Not implemented: an API layer and confirmation emails. These need Cloud Functions, which require the paid Blaze plan. This is documented as a limitation and as future work.
+
 ## Deviations from the Task 1 plan
-- Android-only client. The booking web app on a `book.catheaven.co.za` subdomain was dropped, so Hosting is a placeholder page.
-- No Cloud Functions (free plan). Booking confirmation emails and push notifications to Paw Parents are not implemented, because Cloud Functions require the Blaze plan and a billing card was not available.
-- Images are bundled in the app. Cloud Storage also needs the Blaze plan, so cat images ship inside the Android app instead of being stored in Firebase.
-- Single Firebase project. Only `catheaven-dev` exists. A separate `catheaven-prod` project would be created before a real launch.
-- South Africa region is used instead of europe-west, since it became available after Task 1.
+Android-only client. The booking web app on a book.catheaven.co.za subdomain was deferred to 2027, so Hosting is a placeholder page.
+No Cloud Functions (free plan). Booking confirmation emails and push notifications are not implemented, because Cloud Functions require the Blaze plan. A booking reference is shown in the app instead.
+Images are bundled in the app. Cloud Storage also needs the Blaze plan, so cat images ship inside the Android app and the database stores only the image name.
+Single Firebase project. Only catheaven-dev exists. A separate production project would be created before a real launch.
+South Africa region is used instead of europe-west, since it became available after Task 1.
+Donations are handled outside the app (GivenGain or EFT), so no donation log is stored.
+Distribution and go-live
 
-## Hosting Deployment and Stability Rationale
+Now: the backend is hosted on Firebase, and the app is delivered as an APK, from a GitHub Release or from the CI build, installable on any Android 7.0 or newer device.
 
-The Cat Heaven system is hosted entirely on Google Firebase, using Cloud Firestore for the database and Firebase Hosting or authentication for supporting infrastructure. This choice was made deliberately in Task 1 and remains justified for Task 2's implementation:
+After client approval: the app will be published on Google Play under Cat Heaven's own developer account, so the non-profit owns the store listing. The plan is internal testing, then closed testing with Cat Heaven staff, then a staged production rollout. A separate production Firebase project and Firebase App Check would be added at that point.
 
-No servers to maintain. Cat Heaven is a nonprofit with no dedicated IT staff. A fully serverless architecture means there is no operating system to patch, no server to monitor for uptime, and no database infrastructure to manually administer. It means that Google manages the entire backend, which is critical for a client with no technical team to hand this over to.
 
-High reliability by default. Firestore and Firebase Hosting run on Google's global cloud infrastructure, which allows for automatic scaling and high uptime without any manual configuration from our team. This satisfies the deployment reliability expected of a client ready system without requiring custom server management.
+## Evidence
 
-Cost stability for a nonprofit client. As shown in our Task 1 Running Costs analysis, Firebase's free tier comfortably covers Cat Heaven's expected usage (22 cats, a small number of daily bookings) at R0/month, with costs scaling gradually and predictably only if usage grows significantly beyond that. The project currently runs on the free Spark plan with no charges so the budget alerts will be configured if the client upgrades to the Blaze plan.
-
-Security Rules enforce stability at the data layer. Because all read and write access is controlled through Firestore Security Rules (deployed and tested — see Security section), the system prevents invalid or unauthorized writes from corrupting data, which is itself a form of operational stability independent of server uptime.
-
-Deviation from Task 1 plan: Task 1 originally planned a region in europe-west for lowest latency to South African users. Since Task 1 was written, Firestore introduced a South Africa region, which we adopted instead for genuinely lower latency — a deliberate, informed technical improvement over the original plan rather than a deviation driven by necessity.
-
+Screenshots are in backend-firebase/docs/evidence/.
