@@ -14,8 +14,6 @@ https://youtu.be/KVWhCGPmrSw
 ### App Demo Video Link Task 3
 https://youtu.be/Hd6b01-g62Y
 
-> All cat, shop and menu data is placeholder data pending final confirmation from Cat Heaven. An administrator can edit it at any time without any structural change.
-
 ## Contents
 - [Team and responsibilities](#team-and-responsibilities)
 - [Team attendance and communication](#team-attendance-and-communication)
