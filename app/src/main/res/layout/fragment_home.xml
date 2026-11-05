@@ -38,9 +38,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/headerImage" />
 
-        <!-- Opening hours beside Max Group and Rescue Cats. The row is as tall as the
-             taller side, so the hours are never cut off on narrow phones or with
-             larger text; the hours card stretches to match the right column. -->
+        <!-- Opening hours beside Max Group and Rescue Cats. Both columns are
+             match_parent, so the row is as tall as the taller side and the hours are
+             never cut off. (If only one child is match_parent, LinearLayout ignores it
+             when working out its own height, which is what clipped the hours before.) -->
         <LinearLayout
             android:id="@+id/infoRow"
             android:layout_width="0dp"
@@ -109,7 +110,7 @@
         <LinearLayout
             android:id="@+id/rightColumn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:orientation="vertical">
