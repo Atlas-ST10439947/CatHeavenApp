@@ -38,22 +38,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/headerImage" />
 
+        <!-- Opening hours beside Max Group and Rescue Cats. The row is as tall as the
+             taller side, so the hours are never cut off on narrow phones or with
+             larger text; the hours card stretches to match the right column. -->
+        <LinearLayout
+            android:id="@+id/infoRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bookButton">
+
         <!-- LEFT COLUMN: Opening Hours -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/hoursCard"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:layout_marginEnd="8dp"
             app:cardBackgroundColor="@color/lightGrey"
             app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/rightColumn"
-            app:layout_constraintEnd_toStartOf="@+id/rightColumn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bookButton"
-            app:layout_constraintWidth_percent="0.43">
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,14 +110,9 @@
             android:id="@+id/rightColumn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/hoursCard"
-            app:layout_constraintTop_toBottomOf="@+id/bookButton"
-            app:layout_constraintWidth_percent="0.43">
+            android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -213,6 +217,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
+        </LinearLayout>
 
         <!-- Location Card -->
         <com.google.android.material.card.MaterialCardView
@@ -226,7 +231,7 @@
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rightColumn">
+            app:layout_constraintTop_toBottomOf="@+id/infoRow">
 
             <LinearLayout
                 android:layout_width="match_parent"
