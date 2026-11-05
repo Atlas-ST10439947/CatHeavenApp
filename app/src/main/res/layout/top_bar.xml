@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/surface"
-    app:elevation="8dp">
+    app:elevation="8dp"
+    app:navigationContentDescription="Back"
+    app:navigationIconTint="@color/darkColor">
 
     <LinearLayout
         android:layout_width="match_parent"

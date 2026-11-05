@@ -1,5 +1,6 @@
 package com.example.catheavenapp
 
+import com.example.catheavenapp.ui.admin.CatPhotos
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,7 +59,7 @@ class ResidentFragment : Fragment() {
         binding.catPhoto.contentDescription = "Photo of ${cat.name}"
 
         // Load the image for the detail view
-        val resourceId = context.resources.getIdentifier(cat.photoUrl, "drawable", context.packageName)
+        val resourceId = context.resources.getIdentifier(CatPhotos.drawableKey(cat.photoUrl, cat.name), "drawable", context.packageName)
         if (resourceId != 0) {
             binding.catPhoto.setImageResource(resourceId)
         } else {

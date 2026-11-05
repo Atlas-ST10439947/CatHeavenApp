@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/headerImage"
             android:layout_width="0dp"
-            android:layout_height="220dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:src="@drawable/about2"
             android:contentDescription="Photograph of Cat Heaven cafe and resident cats"
@@ -52,7 +52,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/rightColumn"
             app:layout_constraintEnd_toStartOf="@+id/rightColumn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/introText"
+            app:layout_constraintTop_toBottomOf="@+id/bookButton"
             app:layout_constraintWidth_percent="0.43">
 
             <LinearLayout
@@ -107,7 +107,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/hoursCard"
-            app:layout_constraintTop_toBottomOf="@+id/introText"
+            app:layout_constraintTop_toBottomOf="@+id/bookButton"
             app:layout_constraintWidth_percent="0.43">
 
             <com.google.android.material.card.MaterialCardView
@@ -160,6 +160,10 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/rescueCatsCard"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Rescue cats, 22 furry friends. Opens Meet the Residents."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/lightGrey"
@@ -196,7 +200,9 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
+                    <!-- Replaced with the live count from Firestore once it loads -->
                     <TextView
+                        android:id="@+id/rescueCatsCountText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -323,7 +329,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:minHeight="56dp"
             android:text="Book a Visit"
             android:textSize="16sp"
@@ -331,14 +337,14 @@
             app:cornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rulesCard" />
+            app:layout_constraintTop_toBottomOf="@+id/introText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/donateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="24dp"
             android:minHeight="56dp"
             android:text="Donate to Cat Heaven"
             android:textColor="@color/darkColor"
@@ -350,7 +356,7 @@
             app:iconTint="@color/darkColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bookButton" />
+            app:layout_constraintTop_toBottomOf="@+id/rulesCard" />
 
         <!-- Contact Info -->
         <LinearLayout

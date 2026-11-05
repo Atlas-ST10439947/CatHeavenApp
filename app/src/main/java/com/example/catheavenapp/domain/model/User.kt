@@ -14,7 +14,9 @@ data class User(
     val email: String,
     val phone: String,
     val role: UserRole,
-    val dateJoinedMillis: Long
+    val dateJoinedMillis: Long,
+    /** Set by an admin. Blocked accounts are signed out at login and can't book. */
+    val blocked: Boolean = false
 )
 
 enum class UserRole(val value: String) {

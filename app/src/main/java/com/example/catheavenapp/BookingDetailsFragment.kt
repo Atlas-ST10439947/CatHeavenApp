@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.catheavenapp.data.profile.FirestoreProfileRepository
 import com.example.catheavenapp.databinding.FragmentBookingDetailsBinding
 import com.example.catheavenapp.domain.booking.BookingDraft
 import com.example.catheavenapp.domain.booking.BookingValidator
@@ -16,6 +18,8 @@ import com.example.catheavenapp.ui.booking.BookingFlowViewModel
 import com.example.catheavenapp.ui.booking.SubmitState
 import com.example.catheavenapp.ui.booking.formatGuests
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class BookingDetailsFragment : Fragment() {
 
@@ -41,6 +45,8 @@ class BookingDetailsFragment : Fragment() {
             if (draft.email.isNotEmpty()) binding.inputEmail.setText(draft.email)
             if (draft.phone.isNotEmpty()) binding.inputPhone.setText(draft.phone)
         }
+
+        prefillFromProfile()
 
         binding.btnAddGuest.setOnClickListener { bookingViewModel.addGuest() }
         binding.btnMinusGuest.setOnClickListener { bookingViewModel.removeGuest() }
@@ -81,6 +87,26 @@ class BookingDetailsFragment : Fragment() {
                     button.text = "Confirm Booking"
                 }
             }
+        }
+    }
+
+    /**
+     * Fills name, email and phone from the supporter's profile, so they don't retype them.
+     * Only empty fields are filled, so anything already typed is kept.
+     */
+    private fun prefillFromProfile() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val profile = try {
+                FirestoreProfileRepository().myProfile()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                null   // offline or signed out: the supporter can still type the details
+            } ?: return@launch
+            val views = _binding ?: return@launch
+            if (views.inputName.text.isNullOrBlank()) views.inputName.setText(profile.fullName)
+            if (views.inputEmail.text.isNullOrBlank()) views.inputEmail.setText(profile.email)
+            if (views.inputPhone.text.isNullOrBlank()) views.inputPhone.setText(profile.phone)
         }
     }
 

@@ -55,5 +55,19 @@
             android:textColor="@color/textColor"
             android:textSize="14sp"
             tools:text="0821234567  ·  Joined 05 October 2026" />
+
+        <!-- Hidden on admin accounts, which can't be blocked -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/userBlockButton"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="-8dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:text="Block account"
+            android:textColor="@color/errorRed" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
