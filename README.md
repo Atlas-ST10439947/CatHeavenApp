@@ -6,7 +6,7 @@ Built by Echo Solutions for INSY7315 Task 2: Code and Implementation & Task 3: F
 
 ## Figma and Video Demo Links
 ### Figma Prototype
-[Link]
+https://www.figma.com/proto/6pDfuPbZjcauq0XWeEB5GF/Cat-Heaven-Bookinghttps://www.figma.com/proto/6pDfuPbZjcauq0XWeEB5GF/Cat-Heaven-Booking-Platform?node-id=7020-3430&t=KQVaGNxCFet1znuz-1/Platform?node-id=7020-3430&t=KQVaGNxCFet1znuz-1/
 
 ### App Presentation & Demo Video Link Task 2
 https://youtu.be/KVWhCGPmrSw 
