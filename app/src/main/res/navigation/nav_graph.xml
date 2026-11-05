@@ -45,20 +45,12 @@
         <action
             android:id="@+id/action_settings_to_profile"
             app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_settings_to_notifs"
-            app:destination="@id/notifsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.catheavenapp.SettingsProfileFragment"
         tools:layout="@layout/fragment_settings_profile" />
-
-    <fragment
-        android:id="@+id/notifsFragment"
-        android:name="com.example.catheavenapp.SettingsNotifsFragment"
-        tools:layout="@layout/fragment_settings_notifs" />
 
     <fragment
         android:id="@+id/bookingDateFragment"

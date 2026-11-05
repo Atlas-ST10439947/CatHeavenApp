@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.catheavenapp.data.booking.NotSignedInException
 import com.example.catheavenapp.data.profile.FirestoreProfileRepository
 import com.example.catheavenapp.data.profile.ProfileRepository
-import com.example.catheavenapp.domain.profile.NotificationPrefs
 import com.example.catheavenapp.domain.profile.Profile
 import com.example.catheavenapp.domain.profile.ProfileCheck
 import com.example.catheavenapp.domain.profile.ProfileValidator
@@ -83,27 +82,6 @@ class ProfileViewModel(
             }
         }
         return check
-    }
-
-    fun saveNotifications(prefs: NotificationPrefs) {
-        val previous = (_state.value as? ProfileState.Loaded)?.profile?.notifications ?: return
-        if (prefs == previous) return
-
-        updateLoaded { it.copy(notifications = prefs) }   // show the change straight away
-        viewModelScope.launch {
-            try {
-                repository.updateNotifications(prefs)
-                _saveState.value = ProfileSaveState.Saved("Notification settings saved")
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Diagnostics.warn(TAG, "Saving notification settings failed", e)
-                updateLoaded { it.copy(notifications = previous) }   // put the switches back
-                _saveState.value = ProfileSaveState.Failed(
-                    FailureMessages.forSupporter(e, "save your notification settings")
-                )
-            }
-        }
     }
 
     fun onSaveMessageShown() {

@@ -64,7 +64,7 @@ Supporters
 - Browse the cafe menu
 - Book a visit: choose a date, choose a timeslot, enter details, confirm
 - View upcoming and past bookings
-- Settings: profile and notification preferences
+- Settings: personal profile, and Appearance (System default, Light or Dark, saved on the phone)
 
 Admins (a separate admin area, reached automatically after an admin logs in)
 - View and manage all bookings
