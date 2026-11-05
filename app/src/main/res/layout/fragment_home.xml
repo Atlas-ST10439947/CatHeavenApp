@@ -200,7 +200,9 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
+                    <!-- Replaced with the live count from Firestore once it loads -->
                     <TextView
+                        android:id="@+id/rescueCatsCountText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
