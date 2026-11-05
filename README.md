@@ -2,10 +2,17 @@
 
 An Android app and Firebase backend for Cat Heaven, a South African Rescue Cat Cafe in Somerset West. Supporters can browse the resident cats and the cafe menu and book visit or snack time slots online, and staff manage bookings, timeslots, content and users from an admin area. It replaces the current manual WhatsApp booking process.
 
-Built by Echo Solutions for INSY7315 Task 2: Code and Implementation and Task 3: Final Submission 
+Built by Echo Solutions for INSY7315 Task 2: Code and Implementation & Task 3: Final Submission 
+
+## Figma and Video Demo Links
+### Figma Prototype
+[Link]
 
 ### App Presentation & Demo Video Link Task 2
 https://youtu.be/KVWhCGPmrSw 
+
+### App Demo Video Link Task 3
+[LINK]
 
 > All cat, shop and menu data is placeholder data pending final confirmation from Cat Heaven. An administrator can edit it at any time without any structural change.
 
@@ -53,14 +60,14 @@ We used the WhatsApp group chat for coordination, for example:
 
 ### Attendance record
 | Date | Session type | Medium | Amelia | Courtney | Wiehan |   
-| `22/09/20206` | Part 2 starting meeting | In person | Present | Present | Present |  
-| `<28/09/2026>` | Internal group meeting | online | Present | Present | Present |   
-| `<1/10/2026>` | Internal group meeting | online | Present | Present | Present |   
+| `22/09/2026` | Part 2 starting meeting | In person | Present | Present | Present |  
+| `28/09/2026` | Internal group meeting | online | Present | Present | Present |   
+| `1/10/2026` | Internal group meeting | online | Present | Present | Present |   
 
 | Date | Session type | Medium | Amelia | Courtney | Wiehan |   
-| `15/10/20206` | Part 3 starting meeting | In person | Present | Present | Present |  
-| `<30/10/2026>` | Internal group meeting | online | Present | Present | Present |   
-| `<2/11/2026>` | Internal group meeting | online | Present | Present | Present |   
+| `15/10/2026` | Part 3 starting meeting | In person | Present | Present | Present |  
+| `30/10/2026` | Internal group meeting | online | Present | Present | Present |   
+| `2/11/2026` | Internal group meeting | online | Present | Present | Present |   
 
 
 ## Features and screens
@@ -158,7 +165,7 @@ All access is decided server-side by `backend-firebase/firestore.rules`, and cli
 
 | Collection | Anonymous | Signed-in supporter | Admin |  
 | `cats`, `menuItems` | Read | Read | Read and write |  
-| `timeslots`, `pricingTiers`, 'categories', 'products' | Read | Read | Read and write | 
+| `timeslots`, `pricingTiers`, `categories`, `products` | Read | Read | Read and write | 
 | `users` | None | Read and update own profile only | Read any profile |  
 | `bookings` | None | Create own (1 to 8 guests), read own | Read, update, delete all |  
 | `pawParentEnrolments` | None | Create own, read own, cancel own | Full access |  
@@ -201,19 +208,19 @@ Deployment. Rules, indexes and Hosting are deployed with the Firebase CLI (`fire
   - Push a version tag (`v1.1.0`): a signed release APK is built and published as a GitHub Release
 - The full deployment lifecycle, the secrets it needs and how to roll back are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
-Task 3: scope adjustment and improvements
+## Task 3: scope adjustment and improvements
 
 Scope adjustment. The Task 1 plan had two clients on one Firebase backend: an Android app and a booking website on a subdomain of Cat Heaven's existing site. The owner had limited availability for personal reasons, so we could not get access to the existing website. We therefore focused on one complete Android client first, with the booking website planned for 2027. Our marker confirmed on 20 October 2026 that a website was not required (brief section 9.4.3). The data model, security rules and authentication carry over to a future website without redesign.
 
-Improvements from Task 2 feedback (full detail in the final report):
+## Improvements from Task 2 feedback (full detail in the final report):
 
-Admin content dialogs (add and edit cats and menu items) with validation, in the app and in the rules
-Profile editing and notification preferences saved to Firestore
-Dark theme, and tablet and landscape resources
-Type and range checks on admin-written data, with emulator tests
-Crashlytics monitoring
-Automated rules deployment and signed release APKs through the pipeline
-Supporters can cancel and reschedule their own bookings
+- Admin content dialogs (add and edit cats and menu items) with validation, in the app and in the rules
+- Profile editing and notification preferences saved to Firestore
+- Dark theme, and tablet and landscape resources
+- Type and range checks on admin-written data, with emulator tests
+- Crashlytics monitoring
+- Automated rules deployment and signed release APKs through the pipeline
+- Supporters can cancel and reschedule their own bookings
 
 Not implemented: an API layer and confirmation emails. These need Cloud Functions, which require the paid Blaze plan. This is documented as a limitation and as future work.
 
@@ -229,6 +236,7 @@ Distribution and go-live
 Now: the backend is hosted on Firebase, and the app is delivered as an APK, from a GitHub Release or from the CI build, installable on any Android 7.0 or newer device.
 
 After client approval: the app will be published on Google Play under Cat Heaven's own developer account, so the non-profit owns the store listing. The plan is internal testing, then closed testing with Cat Heaven staff, then a staged production rollout. A separate production Firebase project and Firebase App Check would be added at that point.
+
 ## Hosting Deployment and Stability Rationale
 
 The Cat Heaven system is hosted entirely on Google Firebase, using Cloud Firestore for the database and Firebase Hosting or authentication for supporting infrastructure. This choice was made deliberately in Task 1 and remains justified for Task 2's implementation:
