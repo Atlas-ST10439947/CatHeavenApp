@@ -140,7 +140,7 @@ Cloud Firestore (Standard edition) in the South Africa region, which became avai
 | `pricingTiers` | Visit durations and price per person | Quoted price only, no payments are stored |  
 | `categories` / `products` | Gift shop display | Display only, no online purchasing |  
 | `menuItems` | Cafe menu | Display only |  
-| `users` | One profile per Firebase Auth account | Document ID equals the Auth UID |  
+| `users` | One profile per Firebase Auth account | Document ID equals the Auth UID. `blocked: true` (set by an admin) signs the person out at login and stops them booking |  
 | `bookings` | Visit bookings | Created by the app at runtime |  
 | `pawParentEnrolments` | Supporter-to-cat sponsorship links | Created by the app at runtime |  
 
@@ -155,7 +155,7 @@ All access is decided server-side by `backend-firebase/firestore.rules`, and cli
 
 | Collection | Anonymous | Signed-in supporter | Admin |  
 | `cats`, `timeslots`, `pricingTiers`, `categories`, `products`, `menuItems` | Read | Read | Read and write |  
-| `users` | None | Read and update own profile only | Read any profile |  
+| `users` | None | Read and update own profile only (never `role` or `blocked`) | Read any profile; block or unblock supporters (not admins) |  
 | `bookings` | None | Create own (1 to 8 guests), read own | Read, update, delete all |  
 | `pawParentEnrolments` | None | Create own, read own, cancel own | Full access |  
 

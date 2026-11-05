@@ -21,6 +21,14 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
+    // An admin can block a supporter's account from the Supporter Directory.
+    // Blocked accounts keep their profile and bookings, but can't book, reschedule
+    // or enrol (the app also signs them out at login with a "contact us" message).
+    function isBlocked() {
+      let profile = /databases/$(database)/documents/users/$(request.auth.uid);
+      return signedIn() && exists(profile) && get(profile).data.get('blocked', false) == true;
+    }
+
     // A supporter may only change a timeslot as part of the booking transaction.
     // The rise in bookedCount must equal the guests on a booking created in the
     // same write, the slot must stay within capacity, and status must flip to
@@ -241,14 +249,26 @@ service cloud.firestore {
         && (!('notificationPrefs' in changedKeys()) || validNotificationPrefs(data.notificationPrefs));
     }
 
-    // User accounts - only the account owner can read/update their own profile
+    // An admin may only flip 'blocked' on a supporter's profile: never on an admin
+    // account (including their own), and nothing else on the profile changes.
+    // Supporters can't change 'blocked' themselves, because validProfileChange()
+    // doesn't allow that field.
+    function isAdminBlockChange(uid) {
+      return isAdmin()
+        && request.auth.uid != uid
+        && resource.data.get('role', '') != 'admin'
+        && changedKeys().hasOnly(['blocked'])
+        && request.resource.data.blocked is bool;
+    }
+
+    // User accounts - the owner reads and edits their own profile; admins can read all
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
       allow create: if isOwner(uid)
                     && request.resource.data.role == 'supporter'
                     && request.resource.data.keys().hasOnly(['fullName', 'email', 'phone', 'role', 'dateJoined'])
                     && validName(request.resource.data.fullName);
-      allow update: if isOwner(uid) && validProfileChange();
+      allow update: if (isOwner(uid) && validProfileChange()) || isAdminBlockChange(uid);
       allow delete: if isAdmin();
     }
 
@@ -259,6 +279,7 @@ service cloud.firestore {
                      (signedIn() && resource.data.supporterId == request.auth.uid);
 
       allow create: if signedIn()
+                    && !isBlocked()
                     && request.resource.data.supporterId == request.auth.uid
                     && request.resource.data.numberOfGuests > 0
                     && request.resource.data.numberOfGuests <= 8
@@ -270,7 +291,7 @@ service cloud.firestore {
                          .data.lastBookingId == bookingId;
 
       // Admins can change anything; supporters can only cancel or reschedule their own
-      allow update: if isAdmin() || isOwnerCancel() || isOwnerReschedule();
+      allow update: if isAdmin() || (!isBlocked() && (isOwnerCancel() || isOwnerReschedule()));
       allow delete: if isAdmin();
     }
 
@@ -280,6 +301,7 @@ service cloud.firestore {
                      (signedIn() && resource.data.supporterId == request.auth.uid);
 
       allow create: if signedIn()
+                    && !isBlocked()
                     && request.resource.data.supporterId == request.auth.uid;
 
       allow update: if isAdmin() ||

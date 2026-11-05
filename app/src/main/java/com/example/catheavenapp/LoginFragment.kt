@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.catheavenapp.databinding.FragmentLoginBinding
@@ -55,6 +56,12 @@ class LoginFragment : Fragment() {
                     // check admin rights on every admin read and write.
                     FirebaseFirestore.getInstance().collection("users").document(uid).get()
                         .addOnSuccessListener { doc ->
+                            if (doc.getBoolean("blocked") == true) {
+                                // An admin blocked this account: sign straight back out
+                                FirebaseAuth.getInstance().signOut()
+                                showBlockedMessage()
+                                return@addOnSuccessListener
+                            }
                             val isAdmin = doc.getString("role") == "admin"
                             openHome(if (isAdmin) AdminActivity::class.java else MainActivity::class.java)
                         }
@@ -115,11 +122,27 @@ class LoginFragment : Fragment() {
                     } else {
                         "If there's an account for $email, a reset link is on its way. Check your inbox and spam folder."
                     }
-                    Snackbar.make(views.root, message, Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(views.root, message, Snackbar.LENGTH_LONG)
+                        .apply {
+                            // Show the whole message, not just the first two lines
+                            view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                                ?.maxLines = 5
+                        }
+                        .show()
                 }
             }
         }
         dialog.show()
+    }
+
+    private fun showBlockedMessage() {
+        if (!isAdded) return
+        _binding?.passwordEditText?.text?.clear()
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Your account has been blocked")
+            .setMessage("Please contact us at $CONTACT_EMAIL to find out more.")
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun openHome(target: Class<*>) {
@@ -131,5 +154,10 @@ class LoginFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private companion object {
+        /** Cat Heaven's contact email, as shown on the Home screen. */
+        const val CONTACT_EMAIL = "meow@catheaven.co.za"
     }
 }

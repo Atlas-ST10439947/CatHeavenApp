@@ -89,6 +89,7 @@ console.log("PASS: user can register as a supporter");
   await contentTests();
   await ledgerTests();
   await supporterChangeTests();
+  await blockTests();
 
   await testEnv.cleanup();
   console.log("All tests passed.");
@@ -328,6 +329,77 @@ async function supporterChangeTests() {
   });
   await assertFails(cancel(sam, 2));
   console.log("PASS: bookings can't be changed on the day of the visit");
+}
+
+// ---- Blocking accounts (admin Supporter Directory) ----
+async function blockTests() {
+  const firebase = require("firebase/compat/app");
+  require("firebase/compat/firestore");
+  const { Timestamp, FieldValue } = firebase.firestore;
+  const nextWeek = Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 3600 * 1000));
+
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await db.collection("users").doc("open-1").set({
+      fullName: "Olive Open", email: "olive@example.com", role: "supporter",
+    });
+    await db.collection("users").doc("blocked-1").set({
+      fullName: "Bob Blocked", email: "bob@example.com", role: "supporter", blocked: true,
+    });
+    await db.collection("users").doc("admin-2").set({
+      fullName: "Ann Admin", email: "ann@example.com", role: "admin",
+    });
+    for (const id of ["slot-open", "slot-blocked"]) {
+      await db.collection("timeslots").doc(id).set({
+        date: nextWeek, startTime: "10:00", capacity: 4, bookedCount: 0, status: "open", lastBookingId: "x",
+      });
+    }
+  });
+
+  const admin = testEnv.authenticatedContext("admin-uid", { admin: true }).firestore();
+  const olive = testEnv.authenticatedContext("open-1", {}).firestore();
+  const bob = testEnv.authenticatedContext("blocked-1", {}).firestore();
+  const user = (db, id) => db.collection("users").doc(id);
+
+  // The same two writes the app makes when booking: the booking and its timeslot
+  function book(db, uid, slotId, bookingId) {
+    const batch = db.batch();
+    batch.set(db.collection("bookings").doc(bookingId), {
+      supporterId: uid, timeslotId: slotId, slotDate: nextWeek, slotStart: "10:00",
+      numberOfGuests: 1, pricePerPerson: 120, totalDue: 120, status: "confirmed",
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    batch.update(db.collection("timeslots").doc(slotId), {
+      bookedCount: 1, status: "open", lastBookingId: bookingId,
+    });
+    return batch.commit();
+  }
+
+  await assertSucceeds(book(olive, "open-1", "slot-open", "b-olive"));
+  console.log("PASS: a supporter who isn't blocked can book");
+
+  await assertFails(book(bob, "blocked-1", "slot-blocked", "b-bob"));
+  console.log("PASS: a blocked supporter cannot book");
+
+  await assertFails(bob.collection("pawParentEnrolments").doc("e-bob").set({ supporterId: "blocked-1", catId: "cat-milo" }));
+  console.log("PASS: a blocked supporter cannot enrol as a Paw Parent");
+
+  await assertFails(user(bob, "blocked-1").update({ blocked: false }));
+  console.log("PASS: a blocked supporter cannot unblock themselves");
+
+  await assertFails(user(olive, "blocked-1").update({ blocked: false }));
+  console.log("PASS: a supporter cannot block or unblock someone else");
+
+  await assertSucceeds(user(admin, "blocked-1").update({ blocked: false }));
+  await assertSucceeds(user(admin, "open-1").update({ blocked: true }));
+  console.log("PASS: an admin can block and unblock a supporter");
+
+  await assertFails(user(admin, "admin-2").update({ blocked: true }));
+  console.log("PASS: an admin account cannot be blocked");
+
+  await assertFails(user(admin, "blocked-1").update({ blocked: true, fullName: "Renamed" }));
+  await assertFails(user(admin, "blocked-1").update({ blocked: "yes" }));
+  console.log("PASS: blocking changes nothing else on the profile");
 }
 
 runTests().catch((err) => {
