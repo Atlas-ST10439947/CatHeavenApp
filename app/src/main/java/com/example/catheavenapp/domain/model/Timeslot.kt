@@ -1,5 +1,8 @@
 package com.example.catheavenapp.domain.model
 
+import java.util.Calendar
+import java.util.TimeZone
+
 /**
  * A bookable window of time on a given day. Mirrors a document in the
  * Firestore `timeslots` collection.
@@ -20,6 +23,27 @@ data class Timeslot(
     /** Seats still available. Never negative, even if the data is inconsistent. */
     val remainingCapacity: Int
         get() = (capacity - bookedCount).coerceAtLeast(0)
+
+    /**
+     * When the slot starts: its day ([dateMillis] is midnight) plus [startTime].
+     * If [startTime] can't be read, the start of the day is used.
+     */
+    fun startMillis(timeZone: TimeZone = TimeZone.getDefault()): Long {
+        val parts = startTime.split(":")
+        val hour = parts.getOrNull(0)?.toIntOrNull() ?: return dateMillis
+        val minute = parts.getOrNull(1)?.toIntOrNull() ?: 0
+        return Calendar.getInstance(timeZone).apply {
+            timeInMillis = dateMillis
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    /** True once the slot's start time has passed, e.g. 10:00 when it's already 17:15. */
+    fun hasStarted(nowMillis: Long, timeZone: TimeZone = TimeZone.getDefault()): Boolean =
+        startMillis(timeZone) <= nowMillis
 
     /** True when the slot is open and has at least one seat left. */
     val isBookable: Boolean

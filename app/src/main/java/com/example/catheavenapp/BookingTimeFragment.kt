@@ -125,9 +125,16 @@ class BookingTimeFragment : Fragment() {
         val button = ItemTimeSlotBinding.inflate(layoutInflater, binding.timeSlotGrid, false).root
         val time = formatSlotTime(slot.startTime)
 
-        button.text = if (slot.isBookable) "$time\n${slot.remainingCapacity} left" else "$time\nFull"
-        button.isEnabled = slot.isBookable
-        button.isChecked = slot.isBookable && slot.id == selectedId
+        // Earlier times today can't be booked any more
+        val started = slot.hasStarted(System.currentTimeMillis())
+        val bookable = slot.isBookable && !started
+        button.text = when {
+            started -> "$time\nPassed"
+            slot.isBookable -> "$time\n${slot.remainingCapacity} left"
+            else -> "$time\nFull"
+        }
+        button.isEnabled = bookable
+        button.isChecked = bookable && slot.id == selectedId
         button.tag = slot.id
 
         button.setOnClickListener {
